@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import UserProfile
 
 class SignupForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -17,3 +18,20 @@ class SignupForm(UserCreationForm):
             user.save()
         return user
 
+# class UserProfileForm(forms.ModelForm):
+#     profile_picture = forms.ImageField(required=False, label='Profile Picture')
+        
+#     class Meta:
+#         model = User
+#         fields = ['first_name', 'last_name', 'email', 'profile_picture']
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['profile_picture']
+        
+        
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
