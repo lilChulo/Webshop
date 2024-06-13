@@ -17,5 +17,15 @@
       <p>No profile picture uploaded</p>
     {% endif %}
   </div>
+  <h3>My products</h3>
+  <ul>
+    {% for product in created_products %}
+      <li>
+        <h4><a href="{% url 'product-detail' product.id %}">{{ product.name }}</a></h4>
+      </li>
+    {% empty %}
+      <li>No products created yet.</li>
+    {% endfor %}
+  </ul>
   <a href="{% url 'profile-edit' %}">edit</a>
 {% endblock %}

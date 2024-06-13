@@ -1,0 +1,15 @@
+<!-- templates/products/product_form.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Add Product</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ product_form.as_p }}
+    {{ product_image_formset.management_form }}
+    {% for form in product_image_formset %}
+      {{ form.as_p }}
+    {% endfor %}
+    <button type="submit">Save Product</button>
+  </form>
+{% endblock %}

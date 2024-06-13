@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
-from django.views import generic
 from .forms import SignupForm, UserProfileForm, UserForm
 from .models import UserProfile
+from django.contrib.auth.decorators import login_required
+from products.models import Product
 
 # Create your views here.
 
@@ -26,36 +25,16 @@ def register(request):
     return render(request, 'registration/signup.html', context)
 
 # login_required
+# def profile(request):
+#     user = request.user
+#     context = {'user': user}
+#     return render(request, 'users/profile.html', context)
+
+@login_required
 def profile(request):
     user = request.user
-    context = {'user': user}
-    return render(request, 'users/profile.html', context)
-
-# def edit_profile(request):
-#     user = request.user
-#     if request.method == 'POST':
-#         form = UserProfileForm(request.POST, instance=user)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('profile')
-#     else:
-#         form = UserProfileForm(instance=user)
-    
-#     context = {'form': form}
-#     return render(request, 'users/profile-edit.html', context)
-
-# def edit_profile(request):
-#     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-#     if request.method == 'POST':
-#         form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('profile')
-#     else:
-#         form = UserProfileForm(instance=user_profile)
-    
-#     context = {'form': form}
-#     return render(request, 'users/profile-edit.html', context)
+    created_products = Product.objects.filter(created_by=user)
+    return render(request, 'users/profile.html', {'user': user, 'created_products': created_products})
 
 def edit_profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
