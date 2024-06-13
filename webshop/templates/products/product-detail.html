@@ -9,5 +9,10 @@
   {% if product.product_info_pdf %}
     <p><a href="{{ product.product_info_pdf.url }}" download>Download Product Info</a></p>
   {% endif %}
+
+  {% if request.user.is_authenticated and product.created_by == request.user %}
+    <p><a href="{% url 'delete-product' product.id %}">Delete Product</a></p>
+  {% endif %}
+  
   <a href="{% url 'product-list' %}">Back to Product List</a>
 {% endblock %}
