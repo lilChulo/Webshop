@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import os
 
 # Create your models here.
 
@@ -12,3 +13,16 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name
+
+
+def product_image_upload_to(instance, filename):
+    return os.path.join('product_pictures', str(instance.product.id), filename)
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    # image = models.ImageField(upload_to=product_image_upload_to)
+    images = models.FileField(upload_to=product_image_upload_to, null=True, blank=True)
+
+    def __str__(self):
+        return f"Image for {self.product.name}"
+    

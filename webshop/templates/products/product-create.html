@@ -1,4 +1,3 @@
-<!-- templates/products/product_form.html -->
 {% extends 'base.html' %}
 
 {% block content %}
@@ -7,9 +6,11 @@
     {% csrf_token %}
     {{ product_form.as_p }}
     {{ product_image_formset.management_form }}
-    {% for form in product_image_formset %}
+    {% comment %} {% for form in product_image_formset %}
       {{ form.as_p }}
-    {% endfor %}
+    {% endfor %} {% endcomment %}
+    <label for="images">Images:</label>
+    <input type="file" id="images" name="images" multiple accept="image/jpeg">
     <button type="submit">Save Product</button>
   </form>
 {% endblock %}

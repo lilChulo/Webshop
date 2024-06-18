@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Product List{% endblock %}
 
@@ -8,6 +9,13 @@
     {% if products %}
       {% for product in products %} 
         <li>
+          {% if product.images.exists %}
+            {% with product.images.first as first_image %}
+              <img src="{{ first_image.images.url }}" alt="{{ product.name }} Image" style="max-width: 200px; max-height: 200px;">
+            {% endwith %}
+          {% else %}
+            <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" style="max-width: 200px; max-height: 200px;">
+          {% endif %}
           <h3><a href="{% url 'product-detail' product.id %}">{{ product.name }}</a></h3>
           <p>Price: ${{ product.price }}</p>
         </li>

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Product Detail{% endblock %}
 
@@ -10,8 +11,18 @@
     <p><a href="{{ product.product_info_pdf.url }}" download>Download Product Info</a></p>
   {% endif %}
 
+  {% if product.images.exists %}
+    <h3>Product Images</h3>
+    {% for image in product.images.all %}
+        <img src="{{ image.images.url }}" alt="Product Image" class="test-img">
+    {% endfor %}
+{% else %}
+    <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" class="test-img">
+{% endif %}
+
   {% if request.user.is_authenticated and product.created_by == request.user %}
-    <p><a href="{% url 'delete-product' product.id %}">Delete Product</a></p>
+    <p><a href="{% url 'edit-product' product.id %}">Edit Product</a>
+    <a href="{% url 'delete-product' product.id %}">Delete Product</a></p>
   {% endif %}
   
   <a href="{% url 'product-list' %}">Back to Product List</a>

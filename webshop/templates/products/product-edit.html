@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Edit {{ product.name }}
+{% endblock %}
+
+{% block content %}
+  <h2>Edit "{{ product.name }}"</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="name">Name:</label><br />
+    <input type="text" id="name" name="name" value="{{ product.name }}" /><br /><br />
+
+    <label for="price">Price:</label><br />
+    <input type="text" id="price" name="price" value="{{ product.price }}" /><br /><br />
+
+    <label for="description">Description:</label><br />
+    <textarea id="description" name="description">{{ product.description }}</textarea><br /><br />
+
+    {% if product.product_info_pdf %}
+      <label for="existing_pdf">Existing PDF:</label><br />
+      <a href="{{ product.product_info_pdf.url }}" target="_blank">View PDF</a><br />
+      <input type="checkbox" name="delete_pdf" id="delete_pdf" value="yes">
+      <label for="delete_pdf">Delete PDF</label><br />
+    {% endif %}
+
+    <label for="new_pdf">Upload New PDF:</label><br />
+    <input type="file" id="new_pdf" name="new_pdf" accept=".pdf"><br /><br />
+
+    {% if product.images.exists %}
+      <h3>Product Images</h3>
+      <ul>
+        {% for image in product.images.all %}
+          <li>
+            <img src="{{ image.images.url }}" alt="Product Image" class="test-img">
+            <input type="checkbox" name="delete_file" value="{{ image.id }}" />Delete this file
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <label for="additional_images">Upload Additional Images:</label><br />
+    <input type="file" id="additional_images" name="additional_images" multiple accept="image/jpeg"><br /><br />
+
+    <button type="submit">Save Changes</button>
+    <a href="{% url 'product-detail' product.id %}">Cancel</a>
+  </form>
+{% endblock %}
