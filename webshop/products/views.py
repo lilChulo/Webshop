@@ -3,18 +3,20 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import ProductForm, ProductImageFormSet
 from .models import Product, ProductImage
+from django.db.models import Q
+
 
 @login_required
 def add_product(request):
     if request.method == 'POST':
         product_form = ProductForm(request.POST, request.FILES)
         files = request.FILES.getlist('images')  # Get the list of uploaded files
-        
+
         if product_form.is_valid():
             product = product_form.save(commit=False)
             product.created_by = request.user
             product.save()
-            
+
             for file in files:
                 ProductImage.objects.create(product=product, images=file)
 
@@ -27,30 +29,33 @@ def add_product(request):
     return render(request, 'products/product-create.html', {
         'product_form': product_form,
     })
-    
+
+
 def list_all_products(request):
     products = Product.objects.all()
     return render(request, 'products/product-list.html', {'products': products})
 
 
 def product_detail(request, product_id):
-    product = get_object_or_404(Product, id=product_id) #return an object, or raise an Http404 exception
+    product = get_object_or_404(Product, id=product_id)
     return render(request, 'products/product-detail.html', {'product': product})
+
 
 @login_required
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    
+
     # Prüfen, ob der aktuelle Benutzer der Ersteller des Produkts oder ein Administrator ist
     if request.user == product.created_by or request.user.is_staff:
         # Wenn die Anfrage eine POST-Anfrage ist, das Produkt löschen
         if request.method == 'POST':
             product.delete()
-            return redirect('product-list') 
+            return redirect('product-list')
         return render(request, 'products/product-delete.html', {'product': product})
     else:
         pass
-    
+
+
 @login_required
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -95,3 +100,11 @@ def edit_product(request, product_id):
         'product': product,
     }
     return render(request, 'products/product-edit.html', context)
+
+
+def search_products(request):
+    query = request.GET.get('q')
+    results = []
+    if query:
+        results = Product.objects.filter(name__icontains=query)
+    return render(request, 'products/search_results.html', {'results': results, 'query': query})

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from products.models import Product
 
+
 def home(request):
     # Query the latest 4 products
     # This line of code is querying the database for the latest 4 products from the `Product` model.

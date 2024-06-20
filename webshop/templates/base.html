@@ -1,6 +1,6 @@
 {% load static %}
-<!DOCTYPE html lang="en">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="{% static 'css/page.css' %}">
@@ -13,18 +13,22 @@
       {% if user.is_authenticated %}
         <li><a href="{% url 'profile' %}">Profil</a></li>
         <li><a href="{% url 'logout' %}">Logout</a></li>
-        <li><a href="{% url 'product-list' %}">All</a></li>
-        <li><a href="{% url 'product-create' %}">Add</a></li>
+        <li><a href="{% url 'product:product-list' %}">All</a></li>
+        <li><a href="{% url 'product:product-create' %}">Add</a></li>
       {% else %}
-        <li><a href="{% url 'product-list' %}">All products</a></li>
+        <li><a href="{% url 'product:product-list' %}">All products</a></li>
         <li><a href="{% url 'login' %}">Login</a></li>
         <li><a href="{% url 'register' %}">Signup</a></li>
       {% endif %}
     </ul>
   </nav>
+  <form action="{% url 'product:search' %}" method="get">
+    <input type="text" name="q" placeholder="Search for products...">
+    <button type="submit">Search</button>
+  </form>
   <main>
-        {% block content %}
-        {% endblock %}
+    {% block content %}
+    {% endblock %}
   </main>
 </body>
 </html>

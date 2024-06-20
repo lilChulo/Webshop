@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import SignupForm, UserProfileForm, UserForm
 from .models import UserProfile
 from django.contrib.auth.decorators import login_required
-from products.models import Product
 
 # Create your views here.
 
@@ -33,7 +31,6 @@ def register(request):
 @login_required
 def profile(request):
     user = request.user
-    created_products = Product.objects.filter(created_by=user)
     return render(request, 'users/profile.html', {'user': user, 'created_products': created_products})
 
 def edit_profile(request):
