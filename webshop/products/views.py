@@ -20,7 +20,7 @@ def add_product(request):
             for file in files:
                 ProductImage.objects.create(product=product, images=file)
 
-            return redirect('product-list')
+            return redirect('product:product-list')
         else:
             print(product_form.errors)
     else:
@@ -45,12 +45,10 @@ def product_detail(request, product_id):
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
-    # Prüfen, ob der aktuelle Benutzer der Ersteller des Produkts oder ein Administrator ist
     if request.user == product.created_by or request.user.is_staff:
-        # Wenn die Anfrage eine POST-Anfrage ist, das Produkt löschen
         if request.method == 'POST':
             product.delete()
-            return redirect('product-list')
+            return redirect('product:product-list')
         return render(request, 'products/product-delete.html', {'product': product})
     else:
         pass
@@ -107,4 +105,4 @@ def search_products(request):
     results = []
     if query:
         results = Product.objects.filter(name__icontains=query)
-    return render(request, 'products/search_results.html', {'results': results, 'query': query})
+    return render(request, 'products/search-results.html', {'results': results, 'query': query})

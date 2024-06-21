@@ -44,6 +44,6 @@
     <input type="file" id="additional_images" name="additional_images" multiple accept="image/jpeg"><br /><br />
 
     <button type="submit">Save Changes</button>
-    <a href="{% url 'product-detail' product.id %}">Cancel</a>
+    <a href="{% url 'product:product-detail' product.id %}">Cancel</a>
   </form>
 {% endblock %}

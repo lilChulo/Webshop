@@ -23,8 +23,10 @@
     </ul>
   </nav>
   <form action="{% url 'product:search' %}" method="get">
-    <input type="text" name="q" placeholder="Search for products...">
-    <button type="submit">Search</button>
+      <label>
+          <input type="text" name="q" placeholder="Search for products...">
+      </label>
+      <button type="submit">Search</button>
   </form>
   <main>
     {% block content %}

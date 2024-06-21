@@ -16,7 +16,7 @@
           {% else %}
             <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" style="max-width: 200px; max-height: 200px;">
           {% endif %}
-          <h3><a href="{% url 'product-detail' product.id %}">{{ product.name }}</a></h3>
+          <h3><a href="{% url 'product:product-detail' product.id %}">{{ product.name }}</a></h3>
           <p>Price: ${{ product.price }}</p>
         </li>
       {% endfor %}
