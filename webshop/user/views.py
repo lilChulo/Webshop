@@ -1,6 +1,12 @@
+from django.contrib.auth import logout
 from django.shortcuts import render, redirect
+
+from .forms import UserForm
 from .models import UserProfile
+from .forms import SignupForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
+from products.models import Product
+
 
 # Create your views here.
 
@@ -15,23 +21,25 @@ def register(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             form = form.save()
-            return redirect('home') 
+            return redirect('home')
     else:
         form = SignupForm()
-        
+
     context = {'form': form}
     return render(request, 'registration/signup.html', context)
 
-# login_required
-# def profile(request):
-#     user = request.user
-#     context = {'user': user}
-#     return render(request, 'users/profile.html', context)
 
 @login_required
 def profile(request):
     user = request.user
+    created_products = Product.objects.filter(created_by=user)
     return render(request, 'users/profile.html', {'user': user, 'created_products': created_products})
+
+
+def custom_logout(request):
+    logout(request)
+    return redirect('home')
+
 
 def edit_profile(request):
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)

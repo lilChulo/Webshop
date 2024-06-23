@@ -3,13 +3,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile
 
+
 class SignupForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    
+    #email = forms.EmailField(required=True)
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'password1', 'password2']
-        
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
@@ -18,9 +18,10 @@ class SignupForm(UserCreationForm):
             user.save()
         return user
 
+
 # class UserProfileForm(forms.ModelForm):
 #     profile_picture = forms.ImageField(required=False, label='Profile Picture')
-        
+
 #     class Meta:
 #         model = User
 #         fields = ['first_name', 'last_name', 'email', 'profile_picture']
@@ -29,8 +30,8 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['profile_picture']
-        
-        
+
+
 class UserForm(forms.ModelForm):
     class Meta:
         model = User

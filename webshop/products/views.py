@@ -2,8 +2,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import ProductForm, ProductImageFormSet
-from .models import Product, ProductImage
+from .models import ProductImage
 from django.db.models import Q
+from products.models import Product
 
 
 @login_required

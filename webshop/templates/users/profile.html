@@ -21,7 +21,7 @@
   <ul>
     {% for product in created_products %}
       <li>
-        <h4><a href="{% url 'product-detail' product.id %}">{{ product.name }}</a></h4>
+        <h4><a href="{% url 'product:product-detail' product.id %}">{{ product.name }}</a></h4>
       </li>
     {% empty %}
       <li>No products created yet.</li>
