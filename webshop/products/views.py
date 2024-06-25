@@ -1,10 +1,9 @@
 # products/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import ProductForm, ProductImageFormSet
-from .models import ProductImage
-from django.db.models import Q
-from products.models import Product
+from .forms import ProductForm, ProductImageFormSet, ReviewForm
+from .models import ProductImage, Product, Review
+
 
 
 @login_required
@@ -39,7 +38,39 @@ def list_all_products(request):
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    return render(request, 'products/product-detail.html', {'product': product})
+    reviews = product.reviews.all()
+    user_review = None
+
+    if request.user.is_authenticated:
+        try:
+            user_review = product.reviews.get(user=request.user)
+        except Review.DoesNotExist:
+            pass
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        if user_review:
+            form = ReviewForm(request.POST, instance=user_review)
+        else:
+            form = ReviewForm(request.POST)
+        
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+            
+            # redirect after saving
+            return redirect('product:product-detail', product_id=product.id)
+    else:
+        form = ReviewForm(instance=user_review) if user_review else ReviewForm()
+
+    context = {
+        'product': product,
+        'reviews': reviews,
+        'form': form,
+        'user_review': user_review,
+    }
+    return render(request, 'products/product-detail.html', context)
 
 
 @login_required
@@ -107,3 +138,13 @@ def search_products(request):
     if query:
         results = Product.objects.filter(name__icontains=query)
     return render(request, 'products/search-results.html', {'results': results, 'query': query})
+
+@login_required
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    
+    if request.user == review.user or request.user.is_superuser:
+        review.delete()
+        return redirect('product:product-detail', product_id=review.product.id)
+    else:
+        pass

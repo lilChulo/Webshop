@@ -1,29 +1,90 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Product Detail{% endblock %}
+{% block title %}
+  Product Detail
+{% endblock %}
 
 {% block content %}
   <h2>{{ product.name }}</h2>
   <p>{{ product.description }}</p>
   <p>Price: ${{ product.price }}</p>
   {% if product.product_info_pdf %}
-    <p><a href="{{ product.product_info_pdf.url }}" download>Download Product Info</a></p>
+    <p>
+      <a href="{{ product.product_info_pdf.url }}" download>Download Product Info</a>
+    </p>
   {% endif %}
 
   {% if product.images.exists %}
     <h3>Product Images</h3>
     {% for image in product.images.all %}
-        <img src="{{ image.images.url }}" alt="Product Image" class="test-img">
+      <img src="{{ image.images.url }}" alt="Product Image" class="test-img" />
     {% endfor %}
-{% else %}
-    <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" class="test-img">
-{% endif %}
+  {% else %}
+    <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" class="test-img" />
+  {% endif %}
+
+  <hr>
+  <h3>Reviews</h3>
+  {% if reviews %}
+    {% for review in reviews %}
+    <div class="review">
+      <p>{{ review.comment }}</p>
+      <p>Rating: {{ review.rating }}</p>
+      <p>Written by: {{ review.user.username }}</p>
+      
+      {% if review.user == user or user.is_superuser %}
+        <form action="{% url 'product:delete-review' review.id %}" method="post">
+          {% csrf_token %}
+          <button type="submit">Delete Review</button>
+        </form>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+    <p>No reviews available.</p>
+  {% endif %}
+<hr>
+  {% if user.is_authenticated %}
+    <h3>Leave a Review</h3>
+<form method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-group">
+    {{ form.rating.label_tag }}
+    <select name="{{ form.rating.name }}" class="form-control">
+      {% for value, text in form.rating.field.choices %}
+        {% if value != '' %}
+          <option value="{{ value }}" {% if form.rating.value == value %}selected{% endif %}>{{ text }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    {% if form.rating.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.rating.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    {{ form.comment.label_tag }}
+    {{ form.comment }}
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+  {% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to leave a review.</p>
+  {% endif %}
+
+  <hr />
 
   {% if request.user.is_authenticated and product.created_by == request.user %}
-    <p><a href="{% url 'product:edit-product' product.id %}">Edit Product</a>
-    <a href="{% url 'product:delete-product' product.id %}">Delete Product</a></p>
+    <p>
+      <a href="{% url 'product:edit-product' product.id %}">Edit Product</a>
+      <a href="{% url 'product:delete-product' product.id %}">Delete Product</a>
+    </p>
   {% endif %}
-  
+
   <a href="{% url 'product:product-list' %}">Back to Product List</a>
 {% endblock %}

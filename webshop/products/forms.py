@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Product, ProductImage
+from .models import Product, ProductImage, Review
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -14,5 +14,13 @@ class ProductImageForm(forms.ModelForm):
         fields = ['images']
 
 ProductImageFormSet = inlineformset_factory(Product, ProductImage, form=ProductImageForm, extra=3, max_num=7, validate_max=True)
-
 # https://docs.djangoproject.com/en/5.0/ref/forms/models/
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'comment']
+        widgets = {
+            'rating': forms.RadioSelect(choices=[(i, str(i)) for i in range(1, 6)]),
+            'comment': forms.Textarea(attrs={'rows': 4}),
+        }
