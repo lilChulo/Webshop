@@ -20,6 +20,11 @@
     <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" class="test-img">
 {% endif %}
 
+  <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Add to Cart</button>
+  </form>
+
   {% if request.user.is_authenticated and product.created_by == request.user %}
     <p><a href="{% url 'product:edit-product' product.id %}">Edit Product</a>
     <a href="{% url 'product:delete-product' product.id %}">Delete Product</a></p>

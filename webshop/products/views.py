@@ -1,6 +1,8 @@
 # products/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+
+from . import models
 from .forms import ProductForm, ProductImageFormSet
 from .models import ProductImage
 from django.db.models import Q
@@ -103,7 +105,13 @@ def edit_product(request, product_id):
 
 def search_products(request):
     query = request.GET.get('q')
-    results = []
     if query:
-        results = Product.objects.filter(name__icontains=query)
+        results = Product.objects.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(other_field__icontains=query) |
+            Q(rating__icontains=query)
+        )
+    else:
+        results = Product.objects.none()
     return render(request, 'products/search-results.html', {'results': results, 'query': query})
