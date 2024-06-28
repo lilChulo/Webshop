@@ -37,7 +37,7 @@ def cart_detail(request):
         cart = Cart.objects.get(id=cart_id)
         cart_items = cart.items.all()
         cart.update_totals()
-        total_price = cart.total_price
+        total_price = total_price
     else:
         cart_items = []
 
@@ -58,12 +58,16 @@ def remove_from_cart(request, item_id):
 @login_required
 def checkout(request):
     cart_id = request.session.get('cart_id')
-    if not cart_id:
-        return redirect('cart:cart')
+    if cart_id:
+        cart = get_object_or_404(Cart, id=cart_id)
+        cart_items = cart.items.all()
+        cart.update_totals()
+        total_price = cart.total_price
+    else:
+        cart_items = []
+        total_price = 0
 
-    cart = Cart.objects.get(id=cart_id, user=request.user)
-    cart_items = cart.items.all()
-    return render(request, 'cart/checkout.html', {'cart_items': cart_items})
+    return render(request, 'cart/checkout.html', {'cart_items': cart_items, 'total_price': total_price})
 
 
 def checkout_process(request):

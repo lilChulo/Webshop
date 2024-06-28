@@ -11,7 +11,6 @@
         <li>{{ item.quantity }} x {{ item.product.name }} - ${{ item.subtotal }}</li>
     {% endfor %}
 </ul>
-<p>Total: ${{ total_price }}</p>
 
 <form action="{% url 'cart:checkout_process' %}" method="post">
     {% csrf_token %}

@@ -18,8 +18,10 @@ class Cart(models.Model):
 
     def update_totals(self):
         cart_items = self.items.all()
-        total = sum(item.subtotal() for item in cart_items)
-        self.total_price = total
+        total_items = sum(item.quantity for item in cart_items)
+        total_price = sum(item.subtotal() for item in cart_items)
+        self.total_items = total_items
+        self.total_price = total_price
         self.save()
 
 
@@ -30,9 +32,6 @@ class CartItem(models.Model):
     item_price = models.DecimalField(max_digits=100, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f'{self.quantity} x {self.product.name}'
 
     def subtotal(self):
         return self.quantity * self.item_price
