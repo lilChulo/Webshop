@@ -95,7 +95,7 @@ def edit_product(request, product_id):
         for image in additional_images:
             ProductImage.objects.create(product=product, images=image)
 
-        return redirect('product-detail', product_id=product.id)
+        return redirect('product:product-detail', product_id=product.id)
 
     context = {
         'product': product,
