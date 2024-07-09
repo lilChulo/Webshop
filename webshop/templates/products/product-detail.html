@@ -32,12 +32,22 @@
       <p>{{ review.comment }}</p>
       <p>Rating: {{ review.rating }}</p>
       <p>Written by: {{ review.user.username }}</p>
-      
+      <div class="votes">
+        <span class="green">{{ review.get_upvotes_count }}</span>
+        <a href="{% url 'product:vote-review' review.id 'up' %}">
+            +
+        </a>
+
+        <span class="red">{{ review.get_downvotes_count }}</span>
+        <a href="{% url 'product:vote-review' review.id 'down' %}">
+            -
+        </a>
+    </div>
       {% if review.user == user or user.is_superuser %}
-        <form action="{% url 'product:delete-review' review.id %}" method="post">
-          {% csrf_token %}
-          <button type="submit">Delete Review</button>
-        </form>
+      <form action="{% url 'product:delete-review' review_id=review.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Delete Review</button>
+    </form>
       {% endif %}
     </div>
     {% endfor %}

@@ -141,10 +141,16 @@ def search_products(request):
 
 @login_required
 def delete_review(request, review_id):
-    review = get_object_or_404(Review, id=review_id)
-    
+    review = Review.objects.get(id=int(review_id))
     if request.user == review.user or request.user.is_superuser:
         review.delete()
         return redirect('product:product-detail', product_id=review.product.id)
     else:
         pass
+    
+    
+@login_required
+def vote_review(request, review_id, up_or_down):
+    review = Review.objects.get(id=int(review_id))
+    review.vote(request.user, up_or_down)
+    return redirect('product:product-detail', product_id=review.product.id)
