@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<h2>Checkout</h2>
+
+<ul>
+    {% for item in cart_items %}
+        <li>{{ item.quantity }} x {{ item.product.name }} - ${{ item.subtotal }}</li>
+    {% endfor %}
+</ul>
+
+<form action="{% url 'cart:checkout_process' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Zahlung abschließen</button>
+</form>
+<p>Total: ${{ total_price }}</p>
+
+{% endblock %}

@@ -1,9 +1,14 @@
 # products/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+<<<<<<< webshop/products/views.py
+
+from . import models
 from .forms import ProductForm, ProductImageFormSet, ReviewForm
 from .models import ProductImage, Product, Review
+from django.db.models import Q
 
+>>>>>>> webshop/products/views.py
 
 
 @login_required
@@ -124,7 +129,7 @@ def edit_product(request, product_id):
         for image in additional_images:
             ProductImage.objects.create(product=product, images=image)
 
-        return redirect('product-detail', product_id=product.id)
+        return redirect('product:product-detail', product_id=product.id)
 
     context = {
         'product': product,
@@ -134,9 +139,16 @@ def edit_product(request, product_id):
 
 def search_products(request):
     query = request.GET.get('q')
-    results = []
     if query:
-        results = Product.objects.filter(name__icontains=query)
+<<<<<<< webshop/products/views.py
+        results = Product.objects.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(other_field__icontains=query) |
+            Q(rating__icontains=query)
+        )
+    else:
+        results = Product.objects.none()
     return render(request, 'products/search-results.html', {'results': results, 'query': query})
 
 @login_required
@@ -154,3 +166,4 @@ def vote_review(request, review_id, up_or_down):
     review = Review.objects.get(id=int(review_id))
     review.vote(request.user, up_or_down)
     return redirect('product:product-detail', product_id=review.product.id)
+>>>>>>> webshop/products/views.py
