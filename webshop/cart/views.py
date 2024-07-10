@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.http import require_POST
 from products.models import Product
 from .models import Cart, CartItem
 
@@ -16,8 +15,7 @@ def add_to_cart(request, product_id):
     else:
         cart = Cart.objects.get(id=cart_id, user=request.user)
 
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product,
-                                                        defaults={'quantity': 1, 'item_price': product.price})
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product, defaults={'quantity': 1, 'item_price': product.price})
 
     if not created:
         cart_item.quantity += 1
