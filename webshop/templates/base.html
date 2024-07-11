@@ -11,7 +11,6 @@
   <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
   <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
   <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
-  <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 </head>
 <body>
   <header>
@@ -24,21 +23,21 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">Startpage</a>
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' %}">Profil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'product:product-list' %}">All</a>
+                        <a class="nav-link" href="{% url 'product:product-list' %}">All products</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'product:product-create' %}">Add</a>
                     </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'profile' %}">Settings</a>
+                  </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                  </li>
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'product:product-list' %}">All products</a>
@@ -50,9 +49,6 @@
                         <a class="nav-link" href="{% url 'register' %}">Signup</a>
                     </li>
                 {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'cart:cart' %}">Cart</a>
-                </li>
             </ul>
         </div>
       </div>
@@ -102,16 +98,16 @@
           <h5 class="text-uppercase">Quick Links</h5>
           <ul class="list-unstyled mb-0">
             <li>
-              <a href="{% url 'home' %}" class="text-dark">Home</a>
+              <a href="{% url 'home' %}">Home</a>
             </li>
             <li>
-              <a href="{% url 'product:product-list' %}" class="text-dark">Products</a>
+              <a href="{% url 'product:product-list' %}">Products</a>
             </li>
             <li>
-              <a href="{% url 'home' %}" class="text-dark">Contact</a>
+              <a href="{% url 'home' %}">Contact</a>
             </li>
             <li>
-              <a href="{% url 'home' %}" class="text-dark">About Us</a>
+              <a href="{% url 'home' %}">About Us</a>
             </li>
           </ul>
         </div>
@@ -121,16 +117,16 @@
           <h5 class="text-uppercase">Customer Service</h5>
           <ul class="list-unstyled mb-0">
             <li>
-              <a href="{% url 'home' %}" class="text-dark">Terms of Service</a>
+              <a href="{% url 'home' %}">Terms of Service</a>
             </li>
             <li>
-              <a href="{% url 'home' %}" class="text-dark">Privacy Policy</a>
+              <a href="{% url 'home' %}">Privacy Policy</a>
             </li>
             <li>
-              <a href="{% url 'home' %}" class="text-dark">FAQ</a>
+              <a href="{% url 'home' %}">FAQ</a>
             </li>
             <li>
-              <a href="{% url 'home' %}" class="text-dark">Returns</a>
+              <a href="{% url 'home' %}">Returns</a>
             </li>
           </ul>
         </div>
@@ -140,13 +136,13 @@
           <h5 class="text-uppercase">Contact Us</h5>
           <ul class="list-unstyled">
             <li>
-              <p class="text-dark"><i class="fas fa-map-marker-alt me-2"></i>Luxemburger Str. 10, 13353 Berlin</p>
+              <p><i class="fas fa-map-marker-alt me-2"></i>Luxemburger Str. 10, 13353 Berlin</p>
             </li>
             <li>
-              <p class="text-dark"><i class="fas fa-phone me-2"></i>030 45040</p>
+              <p><i class="fas fa-phone me-2"></i>030 45040</p>
             </li>
             <li>
-              <p class="text-dark"><i class="fas fa-envelope me-2"></i>info@bht-berlin.de</p>
+              <p><i class="fas fa-envelope me-2"></i>info@bht-berlin.de</p>
             </li>
           </ul>
         </div>
