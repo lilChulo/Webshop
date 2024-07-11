@@ -1,35 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Signup{% endblock %}
 
 {% block content %}
-  <h2>Register</h2>
-  <form method="post">
-    {% csrf_token %}
-    {% comment %} <div>
-        <label for="id_first_name">First Name</label>
-        <input type="text" name="first_name" id="id_first_name" maxlength="30" required>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card mt-5">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Register</h2>
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
+          </form>
+        </div>
+      </div>
     </div>
-    <div>
-        <label for="id_last_name">Last Name</label>
-        <input type="text" name="last_name" id="id_last_name" maxlength="30" required>
-    </div>
-    <div>
-        <label for="id_email">E-Mail</label>
-        <input type="email" name="email" id="id_email" required>
-    </div>
-    <div>
-        <label for="id_password1">Password</label>
-        <input type="password" name="password1" id="id_password1" required>
-    </div>
-    <div>
-        <label for="id_password2">Confirm Password</label>
-        <input type="password" name="password2" id="id_password2" required>
-    </div>
-    <div>
-        <button type="submit">Register</button>
-    </div> {% endcomment %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-  </form>
+  </div>
+</div>
 {% endblock %}

@@ -56,12 +56,12 @@
       <div class="container">
         <div class="d-flex flex-wrap justify-content-center align-items-stretch">
             {% for product in latest_products %}
-            <div class="product-item p-3 border bg-light m-2 d-flex flex-column align-items-center" style="flex: 0 0 23%; max-width: 23%;">
+            <div class="product-item p-3 border bg-light m-2 d-flex flex-column align-items-center">
                 {% with product.images.first as first_image %}
                 <div class="image-container" style="background-image: url('{% if first_image %}{{ first_image.images.url }}{% else %}{% static 'img/default-product-image.png' %}{% endif %}');">
                 </div>
                 {% endwith %}
-                <p class="text-center"><strong>${{ product.name }}</strong></p>
+                <p class="text-center"><strong>{{ product.name }}</strong></p>
                 <p class="text-center">Price: ${{ product.price }}</p>
                 <p><a href="{% url 'product:product-detail' product.id %}" class="btn btn-outline-primary custom-hover">View details</a></p>
             </div><!-- END PROD ITEM -->

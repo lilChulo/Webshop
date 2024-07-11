@@ -20,7 +20,7 @@
     --gray-color-800: #3A3A3A;
     --light-gray-color: #D7DDDF;
     --primary-color: #0056b3;
-    --light-color: #f8f9fa;
+    --light-color: #ced4da;
     --dark-color: #212529;
     --light-blue-color: #004085;
     --navbar-color-color: #131814;
@@ -109,10 +109,29 @@ header form {
 }
 
 
+/* FORM */
+
+label {
+    display: block !important;
+    color: var(--dark-color);
+    font-size: 15px !important;
+    margin-bottom: 3px;
+}
+
+input, textarea {
+    display: block !important;
+    width: 100%;
+    border: 1px solid var(--light-color);
+    background-color: var(--white-color);
+    border-radius: 3px !important;
+}
+
 .product-item {
     transform: scale(1);
     transition: 350ms ease-in-out all;
     min-width: 250px;
+    flex: 0 0 23%; 
+    max-width: 23%;
 }
 
 .product-item:hover {

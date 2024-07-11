@@ -68,13 +68,19 @@
         <div class="d-flex align-items-center">
           <span>Cart <span class="badge bg-secondary">{{ request.user.cart.total_items }}</span></span>
           <span class="ms-3">
-            {% if user.is_authenticated and user.userprofile.profile_picture %}
-              <span class="avatar">
-                <img src="{{ user.userprofile.profile_picture.url }}" alt="Avatar" class="rounded-circle" height="25">
-              </span>
+            {% if user.is_authenticated %}
+              <span>Welcome, <a href="{% url 'profile' %}">{{ user.first_name }}</a>!</span>
+              {% if user.userprofile.profile_picture %}
+                <span class="avatar">
+                  <img src="{{ user.userprofile.profile_picture.url }}" alt="Avatar" class="rounded-circle" height="25">
+                </span>
+              {% endif %}
+            {% else %}
+              <span>Hello, please <a href="{% url 'login' %}">login</a></span>
             {% endif %}
           </span>
         </div>
+        
       </div>
     </div>
     
@@ -150,7 +156,7 @@
     </div>
   
     <div class="text-center p-3 bg-dark text-light">
-      Tagir Soltanakhmedov, Nikolaos Lakovidis, Christian Dahlenburg
+      Tagir Soltanakhmedov, Nikolaos Iakovidis, Christian Dahlenburg
     </div>
   </footer>
   
