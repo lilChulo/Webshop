@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Add Review for {{ product.name }}
+{% endblock %}
+
+{% block content %}
+  <h2>Add Review for {{ product.name }}</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-group">
+      {{ form.rating.label_tag }}
+      {{ form.rating }}
+      {% if form.rating.errors %}
+        <div class="invalid-feedback">
+          {% for error in form.rating.errors %}
+            <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="form-group">
+      {{ form.comment.label_tag }}
+      {{ form.comment }}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+{% endblock %}

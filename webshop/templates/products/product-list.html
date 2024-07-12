@@ -5,9 +5,20 @@
 
 {% block content %}
   <h2>Product List</h2>
+
+   <form method="get" action=".">
+    <label for="rating">Filter by rating:</label>
+    <select name="rating" id="rating" onchange="this.form.submit()">
+      <option value="">All ratings</option>
+      {% for value in "12345" %}
+        <option value="{{ value }}" {% if rating == value %}selected{% endif %}>{{ value }}</option>
+      {% endfor %}
+    </select>
+  </form>
+
   <ul>
     {% if products %}
-      {% for product in products %} 
+      {% for product in products %}
         <li>
           {% if product.images.exists %}
             {% with product.images.first as first_image %}
@@ -16,7 +27,7 @@
           {% else %}
             <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" style="max-width: 200px; max-height: 200px;">
           {% endif %}
-          <h3><a href="{% url 'product:product-detail' product.id %}">{{ product.name }}</a></h3>
+            <h3><a href="{% url 'product:product-detail' product.id %}">{{ product.name }}</a></h3>
           <p>Price: ${{ product.price }}</p>
         </li>
       {% endfor %}
