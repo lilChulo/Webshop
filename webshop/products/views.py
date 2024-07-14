@@ -5,6 +5,7 @@ from .forms import ProductForm, ProductImageFormSet, ReviewForm
 from .models import ProductImage, Product, Review
 from django.db.models import Q
 
+
 @login_required
 def add_product(request):
     if request.method == 'POST':
@@ -144,6 +145,7 @@ def search_products(request):
         results = Product.objects.none()
     return render(request, 'products/search-results.html', {'results': results, 'query': query})
 
+
 @login_required
 def delete_review(request, review_id):
     review = Review.objects.get(id=int(review_id))
@@ -152,6 +154,7 @@ def delete_review(request, review_id):
         return redirect('product:product-detail', product_id=review.product.id)
     else:
         pass
+
     
 @login_required
 def vote_review(request, review_id, up_or_down):

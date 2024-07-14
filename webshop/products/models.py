@@ -27,6 +27,7 @@ class ProductImage(models.Model):
     def __str__(self):
         return f"Image for {self.product.name}"
 
+
 class Review(models.Model):
     RATING_CHOICES = (
         (1, '1'),
@@ -101,3 +102,12 @@ class Vote(models.Model):
 
     def __repr__(self):
         return f'{self.up_or_down} on {self.review} by {self.user.username} ({self.timestamp})'
+
+
+class ProductPDF(models.Model):
+    product = models.ForeignKey(Product, related_name='pdfs', on_delete=models.CASCADE)
+    pdf = models.FileField(upload_to='product_pdfs/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.product.name} PDF"
