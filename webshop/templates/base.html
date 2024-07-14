@@ -4,35 +4,170 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="{% static 'css/page.css' %}">
-  <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
+  <title>{% block title %}Webshop{% endblock %}</title>
+  {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+  <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body>
-  <nav>
-    <ul>
-      <li><a href="{% url 'home' %}">Startpage</a></li>
-      {% if user.is_authenticated %}
-        <li><a href="{% url 'profile' %}">Profil</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-        <li><a href="{% url 'product:product-list' %}">All</a></li>
-        <li><a href="{% url 'product:product-create' %}">Add</a></li>
-        <li><a href="{% url 'cart:cart' %}">Einkaufswagen</a></li>
-      {% else %}
-        <li><a href="{% url 'product:product-list' %}">All products</a></li>
-        <li><a href="{% url 'login' %}">Login</a></li>
-        <li><a href="{% url 'register' %}">Signup</a></li>
-        <li><a href="{% url 'cart:cart' %}">Einkaufswagen</a></li>
-      {% endif %}
-    </ul>
+  <header>
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+      <div class="container">
+          <a class="navbar-brand" href="{% url 'home' %}">Logo</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'product:product-list' %}">All products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'product:product-create' %}">Add</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'profile' %}">Settings</a>
+                  </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                  </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'product:product-list' %}">All products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Signup</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+      </div>
   </nav>
-  <form action="{% url 'product:search' %}" method="get">
-      <label>
-          <input type="text" name="q" placeholder="Search for products...">
-      </label>
-      <button type="submit">Search</button>
-  </form>
-  <main>
-    {% block content %}
-    {% endblock %}
-  </main>
+  <div class="container my-4">
+    <div class="max-grid-width">
+      <div class="d-flex justify-content-between">
+        <div class="flex-grow-1 me-3">
+          <form class="d-flex" action="{% url 'product:search' %}" method="get">
+            <label class="visually-hidden" for="search">Search</label>
+            <input class="form-control me-2" type="search" id="search" name="q" placeholder="Search for products...">
+            <button class="btn btn-outline-success" type="submit">
+              <i class="fas fa-search"></i>
+            </button>
+          </form>
+        </div>
+        <div class="d-flex align-items-center">
+          <a href="{% url 'cart:shopping-cart-show' %}" class="btn btn-primary position-relative">
+            Cart (${{ request.user.shoppingcart.get_total }})
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ request.user.shoppingcart.total_items }}
+              <span class="visually-hidden">Items</span>
+            </span>
+          </a> 
+    
+          <span class="ms-3">
+            {% if user.is_authenticated %}
+              <span>Welcome, <a href="{% url 'profile' %}">{{ user.first_name }}</a>!</span>
+              {% if user.userprofile.profile_picture %}
+                <span class="avatar">
+                  <img src="{{ user.userprofile.profile_picture.url }}" alt="Avatar" class="rounded-circle" height="25">
+                </span>
+              {% endif %}
+            {% else %}
+              <span>Hello, please <a href="{% url 'login' %}">login</a></span>
+            {% endif %}
+          </span>
+        </div>
+        
+      </div>
+    </div>
+    
+  </div>
+</header>
+  {% block content %}
+  {% endblock %}
+  <footer class="bg-light text-center text-lg-start mt-5">
+    <div class="container p-4">
+      <div class="row">
+        <!-- Company Information -->
+        <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">BHT Berlin</h5>
+          <p>
+            Demoproduktion für das Modul Webprogrammierung mit Python (Zug 1, Zug 2) (SoSe24)
+          </p>
+        </div>
+  
+        <!-- Quick Links -->
+        <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Quick Links</h5>
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a href="{% url 'home' %}">Home</a>
+            </li>
+            <li>
+              <a href="{% url 'product:product-list' %}">Products</a>
+            </li>
+            <li>
+              <a href="{% url 'home' %}">Contact</a>
+            </li>
+            <li>
+              <a href="{% url 'home' %}">About Us</a>
+            </li>
+          </ul>
+        </div>
+  
+        <!-- Customer Service -->
+        <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Customer Service</h5>
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a href="{% url 'home' %}">Terms of Service</a>
+            </li>
+            <li>
+              <a href="{% url 'home' %}">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="{% url 'home' %}">FAQ</a>
+            </li>
+            <li>
+              <a href="{% url 'home' %}">Returns</a>
+            </li>
+          </ul>
+        </div>
+  
+        <!-- Contact -->
+        <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Contact Us</h5>
+          <ul class="list-unstyled">
+            <li>
+              <p><i class="fas fa-map-marker-alt me-2"></i>Luxemburger Str. 10, 13353 Berlin</p>
+            </li>
+            <li>
+              <p><i class="fas fa-phone me-2"></i>030 45040</p>
+            </li>
+            <li>
+              <p><i class="fas fa-envelope me-2"></i>info@bht-berlin.de</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  
+    <div class="text-center p-3 bg-dark text-light">
+      Tagir Soltanakhmedov, Nikolaos Iakovidis, Christian Dahlenburg
+    </div>
+  </footer>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  
 </body>
 </html>

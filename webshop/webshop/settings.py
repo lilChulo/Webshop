@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'products',
     'user',
-    'cart'
+    'cart',
+    'bootstrap5',
+    'fontawesomefree',
 ]
 
 MIDDLEWARE = [

@@ -4,21 +4,40 @@
 {% block title %}Shopping Cart{% endblock %}
 
 {% block content %}
-<h2>Your Cart</h2>
-{% if cart_items %}
-    <ul>
-    {% for item in cart_items %}
-        <li>
-            {{ item.quantity }} x {{ item.product.name }} - ${{ item.subtotal }}
-            <form action="{% url 'cart:remove_from_cart' item.id %}" method="post" style="display:inline;">
+
+<div class="container mt-5">
+    <h1>Shopping Cart</h1>
+    {% if shopping_cart_is_empty %}
+        <p>Your cart is empty.</p>
+    {% else %}
+        <ul class="list-group">
+            {% for item in shopping_cart_items %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <span>{{ item.quantity }} x <a href="{% url 'product:product-detail' item.product_id %}">{{ item.product_name }}</a></span>
+                        <br>
+                        <span>Price: ${{ item.price }}</span>
+                        <br>
+                        <span>Subtotal: ${{ item.subtotal }}</span>
+                    </div>
+                    <form action="{% url 'cart:remove_from_cart' item.id %}" method="post" class="d-flex align-items-center">
+                        {% csrf_token %}
+                        <div class="input-group me-2" style="width: 120px;">
+                            <label for="quantity" class="visually-hidden">Amount</label>
+                            <input type="number" id="quantity" name="quantity" class="form-control text-center" value="{{ item.quantity }}" min="1" max="{{ item.quantity }}">
+                        </div>
+                        <button type="submit" class="btn btn-danger">Remove from Cart</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="mt-3">
+            <h3>Total: ${{ total }}</h3>
+            <form action="{% url 'cart:clear-cart' %}" method="post">
                 {% csrf_token %}
-                <button type="submit">Entfernen</button>
+                <button type="submit" class="btn btn-warning">Clear Cart</button>
             </form>
-        </li>
-    {% endfor %}
-    </ul>
-    <a href="{% url 'cart:checkout' %}">Zur Kasse</a>
-{% else %}
-    <p>Your cart is empty.</p>
-{% endif %}
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
