@@ -4,6 +4,11 @@
 {% block title %}All Product Overview{% endblock %}
 
 {% block content %}
+
+  <h2>Product List</h2>
+
+   
+
 <div class="container">
   <div class="row">
     <!-- Sidebar -->
@@ -11,6 +16,16 @@
       <div class="sidebar mt-5">
         <!-- Hier kannst du den Inhalt deiner Sidebar platzieren -->
         <h4>Filter</h4>
+
+        <form method="get" action=".">
+    <label for="rating">Filter by rating:</label>
+    <select name="rating" id="rating" onchange="this.form.submit()">
+      <option value="">All ratings</option>
+      {% for value in "12345" %}
+        <option value="{{ value }}" {% if rating == value %}selected{% endif %}>{{ value }}</option>
+      {% endfor %}
+    </select>
+  </form>
         <ul class="list-unstyled mt-4">
           <li><a href="#">Category 1</a></li>
           <li><a href="#">Category 2</a></li>
