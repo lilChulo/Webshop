@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'user',
     'cart',
     'customerservice',
+    'bootstrap5',
+    'fontawesomefree',
 ]
 
 MIDDLEWARE = [

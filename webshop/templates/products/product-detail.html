@@ -2,104 +2,186 @@
 {% load static %}
 
 {% block title %}
-  Product Detail
+  Product Detail: {{ product.name }}
 {% endblock %}
 
 {% block content %}
-  <h2>{{ product.name }}</h2>
-  <p>{{ product.description }}</p>
-  <p>Price: ${{ product.price }}</p>
-  {% if product.product_info_pdf %}
-    <p>
-      <a href="{{ product.product_info_pdf.url }}" download>Download Product Info</a>
-    </p>
-  {% endif %}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-lg-8">
+      <h2>{{ product.name }} <span class="badge bg-secondary">${{ product.price }}</span></h2>
 
-  {% if product.images.exists %}
-    <h3>Product Images</h3>
-    {% for image in product.images.all %}
-      <img src="{{ image.images.url }}" alt="Product Image" class="test-img" />
-    {% endfor %}
-  {% else %}
-    <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" class="test-img" />
-  {% endif %}
+      {% if product.images.exists %}
+        <!-- https://getbootstrap.com/docs/5.3/components/carousel/ -->
+        <div id="prodslider" class="carousel slide mt-5">
+          <div class="carousel-indicators">
+            {% for image in product.images.all %}
+              <button type="button" data-bs-target="#prodslider" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-label="Slide {{ forloop.counter }}">
+              </button>
+            {% endfor %}
+          </div>
+          <div class="carousel-inner">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                {% for image in product.images.all %}
+                  <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ image.images.url }}" alt="Product Image" class="d-block w-100">
+                  </div>
+                {% endfor %}
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#prodslider" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#prodslider" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+        {% else %}
+          <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" class="img-fluid rounded">
+      {% endif %} 
 
-  <hr>
-  <h3>Reviews</h3>
-  {% if reviews %}
-    {% for review in reviews %}
-    <div class="review">
-      <p>{{ review.comment }}</p>
-      <p>Rating: {{ review.rating }}</p>
-      <p>Written by: {{ review.user.username }}</p>
-      <div class="votes">
-        <span class="green">{{ review.get_upvotes_count }}</span>
-        <a href="{% url 'product:vote-review' review.id 'up' %}">
-            +
-        </a>
+      <!-- https://getbootstrap.com/docs/5.0/components/navs-tabs/#javascript-behavior -->
+      <ul class="nav nav-tabs pt-3" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Details</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">More information</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Reviews <span class="rating-stars">{{ product.stars_html }}</span></button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <div class="p-3">
+            <p>{{ product.description }}</p>
+            <p>Price: ${{ product.price }}</p>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          <div class="p-3">
+            {% if product.product_info_pdf %}
+              <p>
+                <a href="{{ product.product_info_pdf.url }}" class="btn btn-primary" download>Download PDF</a>
+              </p>
+              {% else %}
+                <p>Currently, there are no additional product information files available for download.</p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+          <div class="p-3">
+            {% if reviews %}
+              {% for review in reviews %}
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <p class="card-text">{{ review.comment }}</p>
+                    <p class="card-text">Rating: {{ review.rating }}</p>
+                    <p class="card-text">Written by: {{ review.user.username }}</p>
+                    <div class="votes">
+                      <span class="green">{{ review.get_upvotes_count }}</span>
+                      <a href="{% url 'product:vote-review' review.id 'up' %}" class="btn btn-sm btn-outline-success">
+                        +
+                      </a>
 
-        <span class="red">{{ review.get_downvotes_count }}</span>
-        <a href="{% url 'product:vote-review' review.id 'down' %}">
-            -
-        </a>
-    </div>
-      {% if review.user == user or user.is_superuser %}
-      <form action="{% url 'product:delete-review' review_id=review.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Delete Review</button>
-    </form>
-    {% endif %}
-    </div>
-    {% endfor %}
-  {% else %}
-    <p>No reviews available.</p>
-  {% endif %}
-<hr>
-  {% if user.is_authenticated %}
-    <h3>Leave a Review</h3>
-<form method="post">
-  {% csrf_token %}
-  {{ form.non_field_errors }}
-  <div class="form-group">
-    {{ form.rating.label_tag }}
-    <select name="{{ form.rating.name }}" class="form-control">
-      {% for value, text in form.rating.field.choices %}
-        {% if value != '' %}
-          <option value="{{ value }}" {% if form.rating.value == value %}selected{% endif %}>{{ text }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-    {% if form.rating.errors %}
-      <div class="invalid-feedback">
-        {% for error in form.rating.errors %}
-          <span>{{ error }}</span>
-        {% endfor %}
+                      <span class="red">{{ review.get_downvotes_count }}</span>
+                      <a href="{% url 'product:vote-review' review.id 'down' %}" class="btn btn-sm btn-outline-danger">
+                        -
+                      </a>
+                    </div>
+                    {% if review.user == user or user.is_superuser %}
+                      <form action="{% url 'product:delete-review' review_id=review.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger mt-2">Delete Review</button>
+                      </form>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p>No reviews available.</p>
+            {% endif %}
+            <hr>
+      {% if user.is_authenticated %}
+        <h3>Leave a Review</h3>
+        <form method="post" class="mb-4">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          <div class="mb-3">
+            {{ form.rating.label_tag }}
+            <select name="{{ form.rating.name }}" class="form-select">
+              {% for value, text in form.rating.field.choices %}
+                {% if value %}
+                  <option value="{{ value }}" {% if form.rating.value == value %}selected{% endif %}>{{ text }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+            {% if form.rating.errors %}
+              <div class="invalid-feedback">
+                {% for error in form.rating.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            {{ form.comment.label_tag }}
+            {{ form.comment }}
+            {% if form.comment.errors %}
+              <div class="invalid-feedback">
+                {% for error in form.comment.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+      {% else %}
+        <p><a href="{% url 'login' %}" class="btn btn-primary">Log in</a> to leave a review.</p>
+      {% endif %}
+          </div>
+        </div>
       </div>
-    {% endif %}
+      
+    </div>
+    <div class="col-lg-4">
+        {% if request.user.is_authenticated and product.created_by == request.user %}
+        <div class="card mt-3">
+          <div class="card-body">
+          <h5 class="card-title">Settings</h5>
+          <span class="mt-3">
+            <a href="{% url 'product:edit-product' product.id %}" class="btn btn-outline-primary">Edit Product</a>
+            <a href="{% url 'product:delete-product' product.id %}" class="btn btn-outline-danger">Delete Product</a>
+          </span>
+          </div>
+        </div>
+        {% endif %}
+        <div class="mt-5">
+          <form action="{% url 'cart:add_to_cart' product.id %}" method="post" class="d-flex align-items-center">
+            {% csrf_token %}
+            <div class="me-2">
+                <label for="quantity" class="form-label visually-hidden">Amount</label>
+                <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" style="width: 80px;">
+            </div>
+            <button type="submit" class="btn btn-success">Add to Cart</button>
+        </form>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    {{ form.comment.label_tag }}
-    {{ form.comment }}
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-  {% else %}
-    <p><a href="{% url 'login' %}">Log in</a> to leave a review.</p>
-  {% endif %}
-
-  <hr />
-
-  <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Add to Cart</button>
-  </form>
-
-  {% if request.user.is_authenticated and product.created_by == request.user %}
-    <p>
-      <a href="{% url 'product:edit-product' product.id %}">Edit Product</a>
-      <a href="{% url 'product:delete-product' product.id %}">Delete Product</a>
-    </p>
-  {% endif %}
-
-  <a href="{% url 'product:product-list' %}">Back to Product List</a>
+</div>
 {% endblock %}

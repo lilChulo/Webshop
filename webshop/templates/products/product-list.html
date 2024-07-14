@@ -1,38 +1,58 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Product List{% endblock %}
+{% block title %}All Product Overview{% endblock %}
 
 {% block content %}
-  <h2>Product List</h2>
+<div class="container">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-lg-3">
+      <div class="sidebar mt-5">
+        <!-- Hier kannst du den Inhalt deiner Sidebar platzieren -->
+        <h4>Filter</h4>
 
-   <form method="get" action=".">
-    <label for="rating">Filter by rating:</label>
-    <select name="rating" id="rating" onchange="this.form.submit()">
-      <option value="">All ratings</option>
-      {% for value in "12345" %}
-        <option value="{{ value }}" {% if rating == value %}selected{% endif %}>{{ value }}</option>
-      {% endfor %}
-    </select>
-  </form>
+        <form method="get" action="." class="mb-3 mt-4">
+          <div class="btn-group" role="group" aria-label="Rating">
+              <input type="hidden" name="rating" id="rating" value="{{ rating }}">
+              <button type="submit" name="rating" value="" class="btn btn-outline-primary {% if not rating %}active{% endif %}">All Ratings</button>
+              {% for value in "12345" %}
+                  <button type="submit" name="rating" value="{{ value }}" class="btn btn-outline-primary {% if rating == value %}active{% endif %}">{{ value }}</button>
+              {% endfor %}
+          </div>
+      </form>
+      </div>
+    </div>
+    <!-- Main Content -->
+    <div class="col-lg-9">
+      <h2 class="mt-5 mb-4 text-center">Product List</h2>
 
-  <ul>
-    {% if products %}
-      {% for product in products %}
-        <li>
-          {% if product.images.exists %}
-            {% with product.images.first as first_image %}
-              <img src="{{ first_image.images.url }}" alt="{{ product.name }} Image" style="max-width: 200px; max-height: 200px;">
-            {% endwith %}
-          {% else %}
-            <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" style="max-width: 200px; max-height: 200px;">
-          {% endif %}
-            <h3><a href="{% url 'product:product-detail' product.id %}">{{ product.name }}</a></h3>
-          <p>Price: ${{ product.price }}</p>
-        </li>
-      {% endfor %}
-    {% else %}
-      <p>No products found.</p>
-    {% endif %}
-  </ul>
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% if products %}
+          {% for product in products %}
+            <div class="col">
+              <div class="card h-100">
+                <div class="card-body">
+                  {% if product.images.exists %}
+                    {% with product.images.first as first_image %}
+                      <img src="{{ first_image.images.url }}" alt="{{ product.name }} Image" class="card-img-top" style="max-height: 200px;">
+                    {% endwith %}
+                  {% else %}
+                    <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" class="card-img-top" style="max-height: 200px;">
+                  {% endif %}
+                  <h3 class="card-title mt-3"><a href="{% url 'product:product-detail' product.id %}" class="text-decoration-none stretched-link">{{ product.name }}</a></h3>
+                  <p class="card-text">Price: ${{ product.price }}</p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col">
+            <p>No products found.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
