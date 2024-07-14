@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 import os
@@ -12,6 +14,8 @@ class Product(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     other_field = models.CharField(max_length=255, blank=True, null=True)
     rating = models.DecimalField(max_digits=3, decimal_places=1, default=0.0)
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -105,7 +109,8 @@ class Review(models.Model):
 
     def __str__(self):
         return f'Review for {self.product.name} by {self.user.username}'
-    
+
+
 class Vote(models.Model):
     VOTE_TYPES = [
         ('U', 'up'),

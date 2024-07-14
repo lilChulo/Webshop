@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'products',
     'user',
     'cart',
+    'customerservice',
     'bootstrap5',
     'fontawesomefree',
 ]
@@ -120,13 +121,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
+# Verzeichnis, in das alle statischen Dateien gesammelt werden
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Zusätzliche Verzeichnisse, aus denen statische Dateien gesammelt werden sollen
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    os.path.join(BASE_DIR, 'static'),
 ]
-MEDIA_ROOT = BASE_DIR / "media"
+
+# URL, unter der statische Dateien zugänglich sind
+STATIC_URL = '/static/'
+
+# Medien-Dateien
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Default primary key field type

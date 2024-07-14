@@ -26,6 +26,11 @@
                     <a class="nav-link" href="{% url 'home' %}">Home</a>
                 </li>
                 {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                  <li class="nav-item">
+                    <a href="{% url 'customerservice:dashboard' %}">Service</a>
+                  </li>
+                {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'product:product-list' %}">All products</a>
                     </li>
@@ -52,6 +57,7 @@
             </ul>
         </div>
       </div>
+
   </nav>
   <div class="container my-4">
     <div class="max-grid-width">
