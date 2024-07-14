@@ -1,16 +1,24 @@
 {% extends 'base.html' %}
 
+{% block title %}Add New Product{% endblock %}
+
 {% block content %}
-  <h2>Add Product</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ product_form.as_p }}
-    {{ product_image_formset.management_form }}
-    {% comment %} {% for form in product_image_formset %}
-      {{ form.as_p }}
-    {% endfor %} {% endcomment %}
-    <label for="images">Images:</label>
-    <input type="file" id="images" name="images" multiple accept="image/jpeg">
-    <button type="submit">Save Product</button>
-  </form>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-5">
+      <h2 class="my-4">Add New Product</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ product_form.as_p }}
+        
+        <!-- Formset für Produktbilder -->
+        {{ product_image_formset.management_form }}
+        <label for="images">Images:</label>
+        <input type="file" id="images" name="images" multiple accept="image/jpeg">
+        
+        <button type="submit" class="btn btn-primary mt-3">Save Product</button>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

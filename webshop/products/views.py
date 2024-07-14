@@ -143,25 +143,38 @@ def edit_product(request, product_id):
     return render(request, 'products/product-edit.html', context)
 
 
+# def search_products(request):
+#     query = request.GET.get('q')
+#     if query:
+#         try:
+#             rating_filter = int(query)  # Versuchen, die Eingabe in eine Ganzzahl umzuwandeln
+#             results = Product.objects.filter(
+#                 Q(name__icontains=query) |
+#                 Q(description__icontains=query) |
+#                 Q(other_field__icontains=query) |
+#                 Q(rating=rating_filter)  # Genau nach Bewertung filtern
+#             )
+#         except ValueError:
+#             results = Product.objects.filter(
+#                 Q(name__icontains=query) |
+#                 Q(description__icontains=query) |
+#                 Q(other_field__icontains=query)
+#             )
+#     else:
+#         results = Product.objects.none()
+#     return render(request, 'products/search-results.html', {'results': results, 'query': query})
+
 def search_products(request):
     query = request.GET.get('q')
+    results = Product.objects.none()
+
     if query:
-        try:
-            rating_filter = int(query)  # Versuchen, die Eingabe in eine Ganzzahl umzuwandeln
-            results = Product.objects.filter(
-                Q(name__icontains=query) |
-                Q(description__icontains=query) |
-                Q(other_field__icontains=query) |
-                Q(rating=rating_filter)  # Genau nach Bewertung filtern
-            )
-        except ValueError:
-            results = Product.objects.filter(
-                Q(name__icontains=query) |
-                Q(description__icontains=query) |
-                Q(other_field__icontains=query)
-            )
-    else:
-        results = Product.objects.none()
+        # Teilstrings für die Suche verwenden, um sowohl im Namen als auch in der Beschreibung zu suchen
+        results = Product.objects.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query)
+        )
+
     return render(request, 'products/search-results.html', {'results': results, 'query': query})
 
 

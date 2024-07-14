@@ -3,7 +3,8 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 import os
-
+from django.db.models import Avg
+from django.utils.safestring import mark_safe
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -18,6 +19,21 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def average_rating(self):
+        avg_rating = self.reviews.aggregate(Avg('rating'))['rating__avg']
+        return round(avg_rating or 0.0, 1)
+    
+    def stars_html(self):
+        average_rating = self.average_rating()
+        full_stars = int(average_rating)
+        half_star = average_rating - full_stars >= 0.5
+
+        full_stars_html = ''.join('<i class="fas fa-star"></i>' for _ in range(full_stars))
+        if half_star:
+            full_stars_html += '<i class="fas fa-star-half-alt"></i>'
+
+        return mark_safe(f"{full_stars_html}")
 
 
 def product_image_upload_to(instance, filename):
@@ -91,6 +107,15 @@ class Review(models.Model):
 
     def __str__(self):
         return f'Review for {self.product.name} by {self.user.username}'
+    
+    def stars_html(self):
+        full_stars = self.rating
+
+        full_stars_html = ''.join('<i class="fas fa-star primary"></i>' for _ in range(full_stars))
+
+        return mark_safe(f"{full_stars_html}")
+
+    
 
 
 class Vote(models.Model):
