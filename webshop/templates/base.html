@@ -16,7 +16,7 @@
         <li><a href="{% url 'product:product-list' %}">All</a></li>
         <li><a href="{% url 'cart:cart' %}">Einkaufswagen</a></li>
         {% if user.is_staff %}
-          <li><a href="{% url 'customerservice:dashboard' %}">Service</a></li>
+          <li><a href="{% url 'customerservice:customer_service_dashboard' %}">Service</a></li>
         {% endif %}
       {% else %}
         <li><a href="{% url 'product:product-list' %}">All products</a></li>

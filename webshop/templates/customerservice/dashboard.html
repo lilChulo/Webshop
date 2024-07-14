@@ -18,4 +18,20 @@
     </li>
     {% endfor %}
 </ul>
+
+  <h2>Reported Reviews</h2>
+
+  {% if reported_reviews %}
+    <ul>
+      {% for report in reported_reviews %}
+        <li>
+          <p>Review: {{ report.review }}</p>
+          <p>Reason: {{ report.reason }}</p>
+          <p>Reported at: {{ report.created_at }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No reported reviews.</p>
+  {% endif %}
 {% endblock %}
