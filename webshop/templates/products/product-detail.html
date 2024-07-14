@@ -61,7 +61,7 @@
           <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">More information</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Reviews <span class="rating-stars">{{ product.stars_html }}</span></button>
+          <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Reviews  <span class="rating-stars">{{ product.stars_html }}</span> ({{ product.average_rating }})</button>
         </li>
       </ul>
       <div class="tab-content" id="myTabContent">
@@ -89,7 +89,7 @@
                 <div class="card mb-3">
                   <div class="card-body">
                     <p class="card-text">{{ review.comment }}</p>
-                    <p class="card-text">Rating: {{ review.rating }}</p>
+                    <p class="card-text">Rating: {{ review.stars_html }}</p>
                     <p class="card-text">Written by: {{ review.user.username }}</p>
                     <div class="votes">
                       <span class="green">{{ review.get_upvotes_count }}</span>

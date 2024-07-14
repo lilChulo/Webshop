@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}All Product Overview{% endblock %}
+{% block title %}All products Overview{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -31,19 +31,21 @@
         {% if products %}
           {% for product in products %}
             <div class="col">
-              <div class="card h-100">
-                <div class="card-body">
-                  {% if product.images.exists %}
-                    {% with product.images.first as first_image %}
-                      <img src="{{ first_image.images.url }}" alt="{{ product.name }} Image" class="card-img-top" style="max-height: 200px;">
-                    {% endwith %}
-                  {% else %}
-                    <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" class="card-img-top" style="max-height: 200px;">
-                  {% endif %}
-                  <h3 class="card-title mt-3"><a href="{% url 'product:product-detail' product.id %}" class="text-decoration-none stretched-link">{{ product.name }}</a></h3>
-                  <p class="card-text">Price: ${{ product.price }}</p>
+              <a href="{% url 'product:product-detail' product.id %}" class="text-decoration-none text-dark">
+                <div class="card h-100 prod-card">
+                  <div class="card-body">
+                    {% if product.images.exists %}
+                      {% with product.images.first as first_image %}
+                        <img src="{{ first_image.images.url }}" alt="{{ product.name }} Image" class="card-img-top" style="max-height: 200px; object-fit: contain;">
+                      {% endwith %}
+                    {% else %}
+                      <img src="{% static 'img/default-product-image.png' %}" alt="Default Product Image" class="card-img-top" style="max-height: 200px; object-fit: contain;">
+                    {% endif %}
+                    <h3 class="card-title mt-3">{{ product.name }}</h3>
+                    <p class="card-text">Price: ${{ product.price }}</p>
+                  </div>
                 </div>
-              </div>
+              </a>
             </div>
           {% endfor %}
         {% else %}

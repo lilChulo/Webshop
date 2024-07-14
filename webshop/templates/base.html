@@ -11,6 +11,7 @@
   <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
   <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
   <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+  {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> {% endcomment %}
 </head>
 <body>
   <header>
@@ -26,16 +27,16 @@
                     <a class="nav-link" href="{% url 'home' %}">Home</a>
                 </li>
                 {% if user.is_authenticated %}
-                {% if user.is_staff %}
-                  <li class="nav-item">
-                    <a href="{% url 'customerservice:dashboard' %}">Service</a>
-                  </li>
-                {% endif %}
+                  {% if user.is_staff %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'product:product-list' %}">All products</a>
+                      <a class="nav-link" href="{% url 'customerservice:dashboard' %}">Service</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'product:product-create' %}">Add</a>
+                      <a class="nav-link" href="{% url 'product:product-create' %}">Add product</a>
+                  </li>
+                  {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'product:product-list' %}">All products</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'profile' %}">Settings</a>
@@ -79,13 +80,12 @@
               <span class="visually-hidden">Items</span>
             </span>
           </a> 
-    
           <span class="ms-3">
             {% if user.is_authenticated %}
               <span>Welcome, <a href="{% url 'profile' %}">{{ user.first_name }}</a>!</span>
               {% if user.userprofile.profile_picture %}
                 <span class="avatar">
-                  <img src="{{ user.userprofile.profile_picture.url }}" alt="Avatar" class="rounded-circle" height="25">
+                  <a href="{% url 'profile' %}"><img src="{{ user.userprofile.profile_picture.url }}" alt="Avatar" class="rounded-circle"></a>
                 </span>
               {% endif %}
             {% else %}
@@ -171,9 +171,6 @@
     <div class="text-center p-3 bg-dark text-light">
       Tagir Soltanakhmedov, Nikolaos Iakovidis, Christian Dahlenburg
     </div>
-  </footer>
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  
+  </footer>  
 </body>
 </html>

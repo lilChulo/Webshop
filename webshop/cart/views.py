@@ -6,6 +6,7 @@ from products.models import Product
 from .models import ShoppingCart, ShoppingCartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseBadRequest
+from django.contrib import messages
 
 @login_required
 def show_shopping_cart(request):
@@ -43,37 +44,38 @@ def show_shopping_cart(request):
 
     return render(request, 'cart/cart.html', context)
 
-
-@login_required
-@login_required
 def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    myuser = request.user
+    if request.user.is_authenticated:
+        product = get_object_or_404(Product, id=product_id)
+        myuser = request.user
 
-    quantity = int(request.POST.get('quantity', 1))
+        quantity = int(request.POST.get('quantity', 1))
 
-    try:
-        shopping_cart = ShoppingCart.objects.get(myuser=myuser)
-    except ShoppingCart.DoesNotExist:
-        shopping_cart = ShoppingCart.objects.create(myuser=myuser)
+        try:
+            shopping_cart = ShoppingCart.objects.get(myuser=myuser)
+        except ShoppingCart.DoesNotExist:
+            shopping_cart = ShoppingCart.objects.create(myuser=myuser)
 
-    try:
-        shopping_cart_item = ShoppingCartItem.objects.get(
-            shopping_cart=shopping_cart,
-            product_id=product.id
-        )
-        shopping_cart_item.quantity += quantity
-        shopping_cart_item.save()
-    except ShoppingCartItem.DoesNotExist:
-        ShoppingCartItem.objects.create(
-            product_id=product.id,
-            product_name=product.name,
-            price=product.price,
-            quantity=quantity,
-            shopping_cart=shopping_cart
-        )
+        try:
+            shopping_cart_item = ShoppingCartItem.objects.get(
+                shopping_cart=shopping_cart,
+                product_id=product.id
+            )
+            shopping_cart_item.quantity += quantity
+            shopping_cart_item.save()
+        except ShoppingCartItem.DoesNotExist:
+            ShoppingCartItem.objects.create(
+                product_id=product.id,
+                product_name=product.name,
+                price=product.price,
+                quantity=quantity,
+                shopping_cart=shopping_cart
+            )
 
-    return redirect('cart:shopping-cart-show')
+        return redirect('cart:shopping-cart-show')
+    else:
+        messages.warning(request, 'Please login to add items to your cart.')
+        return redirect('login')
 
 @login_required
 def remove_from_cart(request, item_id):
