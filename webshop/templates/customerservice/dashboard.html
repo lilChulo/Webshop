@@ -4,31 +4,34 @@
 {% block title %}Customer Service Dashboard{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Customer Service Dashboard</h2>
+<h2>Customer Service Dashboard</h2>
+<a href="{% url 'admin:products_product_add' %}">Add Product</a>
+<ul>
+    {% for product in products %}
+    <li>
+        {{ product.name }} - ${{ product.price }}
+        <a href="{% url 'customerservice:edit_product' product.id %}">Edit</a>
+        <form action="{% url 'customerservice:delete_product' product.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
 
-    <ul class="list-group mt-4">
-        {% for product in products %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-                <strong>{{ product.name }}</strong> - ${{ product.price }}
-            </div>
-            <div>
-                <a href="{% url 'product:edit-product' product.id %}" class="btn btn-sm btn-info me-2">Edit</a>
-                <form action="{% url 'product:delete-product' product.id %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
-            </div>
+  <h2>Reported Reviews</h2>
+
+  {% if reported_reviews %}
+    <ul>
+      {% for report in reported_reviews %}
+        <li>
+          <p>Review: {{ report.review }}</p>
+          <p>Reason: {{ report.reason }}</p>
+          <p>Reported at: {{ report.created_at }}</p>
         </li>
-        {% endfor %}
+      {% endfor %}
     </ul>
-    <a href="{% url 'admin:products_product_add' %}" class="btn btn-primary mt-3 float-end">Add Product</a>
-
-</div>
-<div class="container mt-5">
-    <h2>Messages</h2>
-
-    <!-- Hier könnten Nachrichten eingefügt werden -->
-</div>
+  {% else %}
+    <p>No reported reviews.</p>
+  {% endif %}
 {% endblock %}

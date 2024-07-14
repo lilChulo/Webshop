@@ -142,3 +142,16 @@ class ProductPDF(models.Model):
 
     def __str__(self):
         return f"{self.product.name} PDF"
+
+
+class ReportedReview(models.Model):
+    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+    reason = models.CharField(max_length=255, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Reported Review on {self.review}"
+
+    class Meta:
+        verbose_name_plural = 'Reported Reviews'
+

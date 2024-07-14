@@ -1,8 +1,10 @@
 # products/views.py
+from pyexpat.errors import messages
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import ProductForm, ReviewForm
-from .models import ProductImage, Product, Review
+from .forms import ProductForm, ReviewForm, ReportReviewForm, ReportForm
+from .models import ProductImage, Product, Review, ReportedReview
 from django.db.models import Q, Avg
 
 
@@ -61,6 +63,16 @@ def product_detail(request, product_id):
             return redirect('product:product-detail', product_id=product.id)
     else:
         form = ReviewForm(instance=user_review) if user_review else ReviewForm()
+
+        # Handling report submission
+        if request.method == 'POST' and 'report_review' in request.POST:
+            form = ReportForm(request.POST)
+            if form.is_valid():
+                reason = form.cleaned_data['reason']
+                review_id = int(request.POST.get('review_id'))
+                review = get_object_or_404(Review, id=review_id)
+                reported_review = ReportedReview.objects.create(review=review, reason=reason)
+                return redirect('customerservice:dashboard')
 
     context = {
         'product': product,
@@ -195,3 +207,50 @@ def product_list(request):
         'rating': rating
     }
     return render(request, 'products/product-list.html', context)
+
+
+def report_review(request, product_id, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            reported_review = ReportedReview.objects.create(
+                review=review,
+                reason=reason
+            )
+            return redirect('product:product-detail', product_id=product_id)
+    else:
+        form = ReportForm()
+
+
+def delete_reported_review(request, report_id):
+    report = get_object_or_404(ReportedReview, id=report_id)
+
+    if request.method == 'POST':
+        # Logik zum Löschen des gemeldeten Reviews
+        report.delete()
+        return redirect('customerservice:dashboard')
+
+    return redirect('customerservice:dashboard')
+
+
+@login_required
+def report_review(request, product_id, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            reported_review = ReportedReview.objects.create(
+                review=review,
+                reason=reason
+            )
+            # Redirect to the product detail page after reporting
+            return redirect('product:product-detail', product_id=product_id)
+        # If form is not valid, you might want to handle this case
+
+    # If it's not a POST request or form is not valid, redirect back to product detail
+    return redirect('product:product-detail', product_id=product_id)

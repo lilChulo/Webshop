@@ -1,9 +1,9 @@
 from pyexpat.errors import messages
 
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.shortcuts import render, get_object_or_404, redirect
-from products.models import Product
+from products.models import Product, ReportedReview
 from products.forms import ProductForm, Review
 
 
@@ -61,3 +61,14 @@ def delete_review(request, review_id):
         review.delete()
         return redirect('product:product-detail', product_id=review.product.id)
     return render(request, 'products/confirm_delete_review.html', {'review': review})
+
+
+@permission_required('auth.view_users', raise_exception=True)
+def customer_service_dashboard(request):
+    products = Product.objects.all()
+    reported_reviews = ReportedReview.objects.all()
+    context = {
+        'products': products,
+        'reported_reviews': reported_reviews
+    }
+    return render(request, 'customerservice/dashboard.html', context)
