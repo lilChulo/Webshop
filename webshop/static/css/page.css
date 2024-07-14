@@ -57,7 +57,7 @@ main {
 
 p {
     font-size: 1.2em;
-    color: var(--gray-color-500);
+    color: var(--gray-color-800);
 }
 
 ul.inner-list li {

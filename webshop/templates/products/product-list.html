@@ -4,11 +4,6 @@
 {% block title %}All Product Overview{% endblock %}
 
 {% block content %}
-
-  <h2>Product List</h2>
-
-   
-
 <div class="container">
   <div class="row">
     <!-- Sidebar -->
@@ -17,20 +12,15 @@
         <!-- Hier kannst du den Inhalt deiner Sidebar platzieren -->
         <h4>Filter</h4>
 
-        <form method="get" action=".">
-    <label for="rating">Filter by rating:</label>
-    <select name="rating" id="rating" onchange="this.form.submit()">
-      <option value="">All ratings</option>
-      {% for value in "12345" %}
-        <option value="{{ value }}" {% if rating == value %}selected{% endif %}>{{ value }}</option>
-      {% endfor %}
-    </select>
-  </form>
-        <ul class="list-unstyled mt-4">
-          <li><a href="#">Category 1</a></li>
-          <li><a href="#">Category 2</a></li>
-          <li><a href="#">Category 3</a></li>
-        </ul>
+        <form method="get" action="." class="mb-3 mt-4">
+          <div class="btn-group" role="group" aria-label="Rating">
+              <input type="hidden" name="rating" id="rating" value="{{ rating }}">
+              <button type="submit" name="rating" value="" class="btn btn-outline-primary {% if not rating %}active{% endif %}">All Ratings</button>
+              {% for value in "12345" %}
+                  <button type="submit" name="rating" value="{{ value }}" class="btn btn-outline-primary {% if rating == value %}active{% endif %}">{{ value }}</button>
+              {% endfor %}
+          </div>
+      </form>
       </div>
     </div>
     <!-- Main Content -->
