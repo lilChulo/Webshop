@@ -9,6 +9,14 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col-lg-8">
+      {% if messages %}
+      {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+      {% endfor %}
+  {% endif %}
       <h2>{{ product.name }} <span class="badge bg-secondary">${{ product.price }}</span></h2>
 
       {% if product.images.exists %}
@@ -88,26 +96,34 @@
               {% for review in reviews %}
                 <div class="card mb-3">
                   <div class="card-body">
+                    <!-- CARD BODY START -->
                     <p class="card-text">{{ review.comment }}</p>
                     <p class="card-text">Rating: {{ review.stars_html }}</p>
                     <p class="card-text">Written by: {{ review.user.username }}</p>
-                    <div class="votes">
-                      <span class="green">{{ review.get_upvotes_count }}</span>
-                      <a href="{% url 'product:vote-review' review.id 'up' %}" class="btn btn-sm btn-outline-success">
-                        +
-                      </a>
-
-                      <span class="red">{{ review.get_downvotes_count }}</span>
-                      <a href="{% url 'product:vote-review' review.id 'down' %}" class="btn btn-sm btn-outline-danger">
-                        -
-                      </a>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                      <div class="votes">
+                        <span class="green">{{ review.get_upvotes_count }}</span>
+                        <a href="{% url 'product:vote-review' review.id 'up' %}" class="btn btn-sm btn-outline-success">+</a>
+                    
+                        <span class="red">{{ review.get_downvotes_count }}</span>
+                        <a href="{% url 'product:vote-review' review.id 'down' %}" class="btn btn-sm btn-outline-danger">-</a>
+                      </div>
+                    
+                      <div class="d-flex">
+                        {% if review.user == user or user.is_superuser %}
+                          <form action="{% url 'product:delete-review' review_id=review.id %}" method="post" class="me-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">Delete Review</button>
+                          </form>
+                        {% endif %}
+                        <form action="{% url 'product:report-review' product.id review.id %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-sm btn-link text-danger p-0">Report Review</button>
+                        </form>
+                      </div>
                     </div>
-                    {% if review.user == user or user.is_superuser %}
-                      <form action="{% url 'product:delete-review' review_id=review.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-danger mt-2">Delete Review</button>
-                      </form>
-                    {% endif %}
+                    
+                    <!-- CARD BODY END -->
                   </div>
                 </div>
               {% endfor %}
@@ -117,39 +133,63 @@
             <hr>
       {% if user.is_authenticated %}
         <h3>Leave a Review</h3>
-        <form method="post" class="mb-4">
-          {% csrf_token %}
-          {{ form.non_field_errors }}
-          <div class="mb-3">
-            {{ form.rating.label_tag }}
-            <select name="{{ form.rating.name }}" class="form-select">
-              {% for value, text in form.rating.field.choices %}
-                {% if value %}
-                  <option value="{{ value }}" {% if form.rating.value == value %}selected{% endif %}>{{ text }}</option>
-                {% endif %}
-              {% endfor %}
-            </select>
-            {% if form.rating.errors %}
-              <div class="invalid-feedback">
-                {% for error in form.rating.errors %}
-                  <span>{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
-          <div class="mb-3">
-            {{ form.comment.label_tag }}
-            {{ form.comment }}
-            {% if form.comment.errors %}
-              <div class="invalid-feedback">
-                {% for error in form.comment.errors %}
-                  <span>{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
-          <button type="submit" class="btn btn-primary">Submit Review</button>
-        </form>
+        <!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                      Leave a comment
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Leave a Review</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form method="post" class="mb-4">
+                              {% csrf_token %}
+                              {{ form.non_field_errors }}
+                              <div class="mb-3">
+                                {{ form.rating.label_tag }}
+                                <select name="{{ form.rating.name }}" class="form-select">
+                                  {% for value, text in form.rating.field.choices %}
+                                    {% if value %}
+                                      <option value="{{ value }}" {% if form.rating.value == value %}selected{% endif %}>{{ text }}</option>
+                                    {% endif %}
+                                  {% endfor %}
+                                </select>
+                                {% if form.rating.errors %}
+                                  <div class="invalid-feedback">
+                                    {% for error in form.rating.errors %}
+                                      <span>{{ error }}</span>
+                                    {% endfor %}
+                                  </div>
+                                {% endif %}
+                              </div>
+                              <div class="mb-3">
+                                {{ form.comment.label_tag }}
+                                {{ form.comment }}
+                                {% if form.comment.errors %}
+                                  <div class="invalid-feedback">
+                                    {% for error in form.comment.errors %}
+                                      <span>{{ error }}</span>
+                                    {% endfor %}
+                                  </div>
+                                {% endif %}
+                              </div>
+                              <button type="submit" class="btn btn-primary">Submit comment</button>
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            {% comment %} <button type="button" class="btn btn-primary">Save changes</button> {% endcomment %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+        
       {% else %}
         <p><a href="{% url 'login' %}" class="btn btn-primary">Log in</a> to leave a review.</p>
       {% endif %}

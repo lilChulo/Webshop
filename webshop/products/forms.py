@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Product, ProductImage, Review
+from .models import Product, ProductImage, Review, ReportedReview
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -23,4 +23,12 @@ class ReviewForm(forms.ModelForm):
         widgets = {
             'rating': forms.RadioSelect(choices=[(i, str(i)) for i in range(1, 6)]),
             'comment': forms.Textarea(attrs={'rows': 4}),
+        }
+
+class ReportReviewForm(forms.ModelForm):
+    class Meta:
+        model = ReportedReview
+        fields = ['reason']
+        widgets = {
+            'reason': forms.Textarea(attrs={'rows': 4}),
         }
