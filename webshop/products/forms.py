@@ -25,10 +25,5 @@ class ReviewForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={'rows': 4}),
         }
 
-class ReportReviewForm(forms.ModelForm):
-    class Meta:
-        model = ReportedReview
-        fields = ['reason']
-        widgets = {
-            'reason': forms.Textarea(attrs={'rows': 4}),
-        }
+class ReportReviewForm(forms.Form):
+    reason = forms.CharField(max_length=100, required=True)

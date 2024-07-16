@@ -172,3 +172,7 @@ input, textarea {
     transform: scale(1.02);
     box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.1);
 }
+
+.pos-right {
+    right: -15px;
+}

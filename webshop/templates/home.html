@@ -55,6 +55,7 @@
     <div class="row">
       <div class="container">
         <div class="d-flex flex-wrap justify-content-center align-items-stretch">
+            {% if latest_products %}
             {% for product in latest_products %}
             <div class="product-item p-3 border bg-light m-2 d-flex flex-column align-items-center">
                 {% with product.images.first as first_image %}
@@ -66,6 +67,12 @@
                 <p><a href="{% url 'product:product-detail' product.id %}" class="btn btn-outline-primary custom-hover">View details</a></p>
             </div><!-- END PROD ITEM -->
             {% endfor %}
+            {% else %}
+              <!-- Hier wird der Hinweis angezeigt, wenn keine Produkte vorhanden sind -->
+              <div class="alert alert-info text-center" role="alert">
+                There are no new products available.
+              </div>
+            {% endif %}
         </div> <!-- END FLEX CONTAINER -->
     </div> <!-- END CONTAINER -->
   </div>    

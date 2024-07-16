@@ -21,7 +21,9 @@
         <p class="mb-2">First Name: {{ user.first_name }}</p>
         <p class="mb-2">Last Name: {{ user.last_name }}</p>
         <p class="mb-3">Email: {{ user.email }}</p>
-        <a href="{% url 'profile-edit' %}" class="btn btn-primary">Edit Profile</a>
+        <a href="{% url 'profile-edit' %}" class="btn btn-primary">
+          <i class="fas fa-edit"></i> Edit Profile
+        </a>
       </div>
     </div>
     <div class="col-lg-6">

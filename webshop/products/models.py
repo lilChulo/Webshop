@@ -144,11 +144,11 @@ class ProductPDF(models.Model):
         return f"{self.product.name} PDF"
 
 class ReportedReview(models.Model):
-    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='reports')
+    review = models.ForeignKey(Review, on_delete=models.SET_NULL, null=True, related_name='reports')
     reason = models.CharField(max_length=255)
-    reported_by = models.ForeignKey(User, on_delete=models.CASCADE) 
+    reported_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     resolved = models.BooleanField(default=False)  # Flag für Bearbeitungszustand
 
     def __str__(self):
-        return f"Reported Review for {self.review.id}"
+        return f"Reported Review for {self.review_id}"
