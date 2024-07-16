@@ -1,9 +1,10 @@
 # products/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import ProductForm, ProductImageFormSet, ReviewForm
-from .models import ProductImage, Product, Review
-from django.db.models import Q
+from .forms import ProductForm, ReviewForm, ReportReviewForm
+from .models import ProductImage, Product, Review, ReportedReview
+from django.db.models import Q, Avg
+from django.contrib import messages
 
 @login_required
 def add_product(request):
@@ -37,28 +38,26 @@ def list_all_products(request):
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    reviews = product.reviews.all()
-    user_review = None
+    reviews = Review.objects.filter(product=product)
+    average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
 
+    user_review = None
     if request.user.is_authenticated:
-        try:
-            user_review = product.reviews.get(user=request.user)
-        except Review.DoesNotExist:
-            pass
+        user_review = reviews.filter(user=request.user).first()
 
     if request.method == 'POST' and request.user.is_authenticated:
         if user_review:
             form = ReviewForm(request.POST, instance=user_review)
         else:
             form = ReviewForm(request.POST)
-        
+
         if form.is_valid():
             review = form.save(commit=False)
             review.product = product
             review.user = request.user
             review.save()
-            
-            # redirect after saving
+
+            # Redirect after saving
             return redirect('product:product-detail', product_id=product.id)
     else:
         form = ReviewForm(instance=user_review) if user_review else ReviewForm()
@@ -66,10 +65,12 @@ def product_detail(request, product_id):
     context = {
         'product': product,
         'reviews': reviews,
+        'average_rating': average_rating,
         'form': form,
         'user_review': user_review,
     }
     return render(request, 'products/product-detail.html', context)
+
 
 
 @login_required
@@ -130,19 +131,19 @@ def edit_product(request, product_id):
     }
     return render(request, 'products/product-edit.html', context)
 
-
 def search_products(request):
     query = request.GET.get('q')
+    results = Product.objects.none()
+
     if query:
+        # Teilstrings für die Suche verwenden, um sowohl im Namen als auch in der Beschreibung zu suchen
         results = Product.objects.filter(
             Q(name__icontains=query) |
-            Q(description__icontains=query) |
-            Q(other_field__icontains=query) |
-            Q(rating__icontains=query)
+            Q(description__icontains=query)
         )
-    else:
-        results = Product.objects.none()
+
     return render(request, 'products/search-results.html', {'results': results, 'query': query})
+
 
 @login_required
 def delete_review(request, review_id):
@@ -152,9 +153,40 @@ def delete_review(request, review_id):
         return redirect('product:product-detail', product_id=review.product.id)
     else:
         pass
+
     
 @login_required
 def vote_review(request, review_id, up_or_down):
     review = Review.objects.get(id=int(review_id))
     review.vote(request.user, up_or_down)
     return redirect('product:product-detail', product_id=review.product.id)
+
+
+def product_list(request):
+    rating = request.GET.get('rating')
+    if rating:
+        products = Product.objects.annotate(average_rating=Avg('reviews__rating')).filter(average_rating=rating)
+    else:
+        products = Product.objects.all()
+
+    context = {
+        'products': products,
+        'rating': rating
+    }
+    return render(request, 'products/product-list.html', context)
+
+
+@login_required
+def report_review(request, product_id, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    if request.method == 'POST':
+        form = ReportReviewForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            ReportedReview.objects.create(review=review, reason=reason, reported_by=request.user)
+            messages.success(request, 'Review reported successfully.')
+            return redirect('product:product-detail', product_id=product_id)  # Redirect to product detail
+    else:
+        form = ReportReviewForm()
+    
+    return render(request, 'products/report_review.html', {'form': form, 'review': review, 'product_id': product_id})

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Customer Service Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Customer Service Dashboard</h2>
+
+    <ul class="list-group mt-4">
+        {% for product in products %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong><a href="{% url 'product:product-detail' product.id %}" class="text-decoration-none text-dark">{{ product.name }}</a></strong> - ${{ product.price }}
+            </div>
+            <div>
+                <a href="{% url 'product:edit-product' product.id %}" class="btn btn-sm btn-info me-2">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <form action="{% url 'product:delete-product' product.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'product:product-create' %}" class="btn btn-primary mt-3 float-end">Add Product</a>
+</div>
+
+<div class="container mt-5">
+    <h2>Reported Reviews</h2>
+    <ul class="list-group mt-4">
+        {% if reported_reviews %}
+            {% for reported_review in reported_reviews %}
+                {% if not reported_review.resolved %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0">
+                                {{ reported_review.review.text }}
+                                <i class="fas fa-times-circle text-danger"></i>
+                            </h5>
+                            <span class="text-muted">Reported by: {{ reported_review.reported_by }}</span><br>
+                            <span>"{{ reported_review.review.comment }}"</span>
+                        </div>
+                        <div>
+                            <form action="{% url 'customerservice:delete-reported-review' reported_review.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash-alt"></i> Delete Report
+                                </button>
+                            </form>
+                            <form action="{% url 'customerservice:toggle-resolve-reported-review' reported_review.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="fas fa-check-circle"></i> Resolve
+                                </button>
+                            </form>
+                            <form action="{% url 'customerservice:delete-review-and-resolve' reported_review.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-trash-alt"></i><i class="fas fa-check-circle"></i> Delete & Resolve
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% for reported_review in reported_reviews %}
+                {% if reported_review.resolved %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                        <div>
+                            <h5 class="mb-0">
+                                {{ reported_review.review.text }}
+                                <i class="fas fa-check-circle text-success"></i>
+                            </h5>
+                            <span class="text-muted">Reported by: {{ reported_review.reported_by }}</span><br>
+                            <span>"{{ reported_review.review.comment }}"</span>
+                        </div>
+                        <div>
+                            <form action="{% url 'customerservice:delete-reported-review' reported_review.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash-alt"></i> Delete Report
+                                </button>
+                            </form>
+                            <form action="{% url 'customerservice:toggle-resolve-reported-review' reported_review.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-times-circle"></i> Unresolve
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <li class="list-group-item">No reported reviews found.</li>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Report Review
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-lg-8">
+      <h2>Report Review</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_reason" class="form-label">Reason for Report</label>
+            <textarea id="id_reason" name="reason" class="form-control" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Report</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,31 +1,55 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  Profile
+  Profile settings
 {% endblock %}
 
 {% block content %}
-  <h3>Your Profile Information</h3>
-  <div>
-    <h3>{{ user.username }}</h3>
-    <p>First Name: {{ user.first_name }}</p>
-    <p>Last Name: {{ user.last_name }}</p>
-    <p>Email: {{ user.email }}</p>
-    {% if user.userprofile.profile_picture %}
-      <img src="{{ user.userprofile.profile_picture.url }}" alt="Profile Picture" class="profile-img" />
-    {% else %}
-      <p>No profile picture uploaded</p>
-    {% endif %}
+<main class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="p-3 border bg-light">
+        <h3 class="mb-4 text-center">Your Profile Information</h3>
+        <div class="text-center mb-3">
+          {% if user.userprofile.profile_picture %}
+            <img src="{{ user.userprofile.profile_picture.url }}" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 150px;">
+          {% else %}
+            <p class="text-muted">No profile picture uploaded</p>
+          {% endif %}
+        </div>
+        <h4 class="mb-3">{{ user.username }}</h4>
+        <p class="mb-2">First Name: {{ user.first_name }}</p>
+        <p class="mb-2">Last Name: {{ user.last_name }}</p>
+        <p class="mb-3">Email: {{ user.email }}</p>
+        <a href="{% url 'profile-edit' %}" class="btn btn-primary">
+          <i class="fas fa-edit"></i> Edit Profile
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="p-3 border bg-light">
+        <h3 class="mb-4 text-center">My Reviews</h3>
+        {% if user.reviews.exists %}
+          <ul class="list-group">
+            {% for review in user.reviews.all %}
+              <li class="list-group-item">
+                <h5><a href="{% url 'product:product-detail' review.product.id %}" class="text-decoration-none">{{ review.product.name }}</a></h5>
+                <p>Rating: {{ review.rating }}</p>
+                {% if review.comment|length > 300 %}
+                  <p>{{ review.comment|slice:":300" }}... <a href="{% url 'product:product-detail' review.product.id %}#review-{{ review.id }}">Read more</a></p>
+                {% else %}
+                  <p>{{ review.comment }}</p>
+                {% endif %}
+              </li>
+            {% empty %}
+              <li class="list-group-item text-center text-muted">No reviews yet.</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted text-center mt-3">You haven't written any reviews yet.</p>
+        {% endif %}
+      </div>
+    </div>
   </div>
-  <h3>My products</h3>
-  <ul>
-    {% for product in created_products %}
-      <li>
-        <h4><a href="{% url 'product:product-detail' product.id %}">{{ product.name }}</a></h4>
-      </li>
-    {% empty %}
-      <li>No products created yet.</li>
-    {% endfor %}
-  </ul>
-  <a href="{% url 'profile-edit' %}">edit</a>
+</main>
 {% endblock %}
