@@ -199,7 +199,7 @@
       
     </div>
     <div class="col-lg-4">
-        {% if request.user.is_authenticated and product.created_by == request.user %}
+        {% if request.user.is_authenticated and request.user.is_staff %}
         <div class="card mt-3">
           <div class="card-body">
           <h5 class="card-title">Settings</h5>

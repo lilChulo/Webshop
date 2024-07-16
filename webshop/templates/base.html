@@ -12,31 +12,13 @@
   <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
   <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
   <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    .wrapper {
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-    .content {
-      flex: 1;
-    }
-    footer {
-      flex-shrink: 0;
-    }
-  </style>
 </head>
 <body>
   <div class="wrapper">
     <header>
       <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">Logo</a>
+            <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/logo.png'%}" alt="Logo"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -104,7 +86,7 @@
                     <span class="visually-hidden">Items</span>
                 </span>
               </a>
-              <span class="ms-3">
+              <span class="ms-3 mobile">
                 {% if user.is_authenticated %}
                   <span>Welcome, <a href="{% url 'profile' %}">{{ user.first_name }}</a>!</span>
                   {% if user.userprofile.profile_picture %}
@@ -130,9 +112,9 @@
         <div class="row">
           <!-- Company Information -->
           <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-            <h5 class="text-uppercase">BHT Berlin</h5>
+            <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/logo-small.png'%}" alt="Logo"></a>
             <p>
-              Demoproduktion für das Modul Webprogrammierung mit Python (Zug 1, Zug 2) (SoSe24)
+              Your online store for electronic products with fast delivery and excellent service.
             </p>
           </div>
     
@@ -185,7 +167,7 @@
                 <p><i class="fas fa-phone me-2"></i>030 45040</p>
               </li>
               <li>
-                <p><i class="fas fa-envelope me-2"></i>info@bht-berlin.de</p>
+                <p><i class="fas fa-envelope me-2"></i>info@techmarkt.com</p>
               </li>
             </ul>
           </div>
@@ -193,9 +175,11 @@
       </div>
     
       <div class="text-center p-3 bg-dark text-light">
-        Tagir Soltanakhmedov, Nikolaos Iakovidis, Christian Dahlenburg
+        <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/logo-footer.png'%}" alt="Logo"></a>
       </div>
-    </footer>  
+    </footer>
+    
+    
   </div>
 </body>
 </html>

@@ -1,16 +1,5 @@
 /* GENERAL */
 :root {
-    --bp-xs-max: 575.98px;
-    --bp-sm-min: 576px;
-    --bp-sm-max: 767.98px;
-    --bp-md-min: 768px;
-    --bp-md-max: 991.98px;
-    --bp-lg-min: 992px;
-    --bp-lg-max: 1199.98px;
-    --bp-xl-min: 1200px;
-    --bp-xl-max: 1399.98px;
-    --bp-xxl-min: 1400px;
-
     --accent-color: #717171;
     --white-color: #fff;
     --black-color: #000;
@@ -173,6 +162,34 @@ input, textarea {
     box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.1);
 }
 
-.pos-right {
-    right: -15px;
-}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .content {
+    flex: 1;
+  }
+  footer {
+    flex-shrink: 0;
+  }
+
+  .navbar-brand img {
+    max-width: 200px;
+  }
+
+  @media (max-width: 768px) {
+    .mobile {
+      display: none;
+    }
+  }
+  @media (min-width: 768px) {
+    .mobile {
+      display: block;
+    }
+  }
