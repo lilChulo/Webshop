@@ -29,9 +29,9 @@ class Product(models.Model):
         full_stars = int(average_rating)
         half_star = average_rating - full_stars >= 0.5
 
-        full_stars_html = ''.join('<i class="fas fa-star"></i>' for _ in range(full_stars))
+        full_stars_html = ''.join('<i class="fa fa-star"></i>' for _ in range(full_stars))
         if half_star:
-            full_stars_html += '<i class="fas fa-star-half-alt"></i>'
+            full_stars_html += '<i class="fa fa-star"></i>'
 
         return mark_safe(f"{full_stars_html}")
 
@@ -111,7 +111,7 @@ class Review(models.Model):
     def stars_html(self):
         full_stars = self.rating
 
-        full_stars_html = ''.join('<i class="fas fa-star primary"></i>' for _ in range(full_stars))
+        full_stars_html = ''.join('<i class="fa fa-star primary"></i>' for _ in range(full_stars))
 
         return mark_safe(f"{full_stars_html}")
 
