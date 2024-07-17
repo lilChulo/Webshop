@@ -58,7 +58,7 @@
         <div class="d-flex flex-wrap justify-content-center align-items-stretch">
             {% if latest_products %}
             {% for product in latest_products %}
-            <div class="product-item p-3 border bg-light m-2 d-flex flex-column align-items-center">
+            <div class="product-item p-3 border m-2 d-flex flex-column align-items-center">
                 {% with product.images.first as first_image %}
                 <div class="image-container" style="background-image: url('{% if first_image %}{{ first_image.images.url }}{% else %}{% static 'img/default-product-image.png' %}{% endif %}');">
                 </div>
@@ -79,11 +79,11 @@
   </div>    
 
   <div class="container mt-5">
-    <div class="row align-items-center">
+    <div class="row align-items-center p-3">
       <div class="col-md-6">
         <h1>Welcome to TechMart</h1>
         <p>TechMart is your reliable partner for lightning-fast delivery of electronic products directly to your doorstep. With a wide selection of top brands and the latest technologies, we offer you a seamless shopping experience designed around speed, quality, and customer satisfaction. Discover our range of smartphones, laptops, accessories, and more - all just a click away. </p><p>Enjoy the convenience of online shopping with fast shipping options and dedicated customer service available whenever you need assistance.</p>
-        <a href="{% url 'product:product-list' %}" class="btn btn-primary">Discover our products</a>
+        <a href="{% url 'product:product-list' %}" class="btn btn-primary mb-2">Discover our products</a>
       </div>
       <div class="col-md-6">
         <img src="{% static 'img/content/shop.jpg' %}" alt="TechMart Shop" class="img-fluid">
