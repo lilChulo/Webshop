@@ -2,19 +2,14 @@
 :root {
     --accent-color: #717171;
     --white-color: #fff;
-    --black-color: #000;
     --gray-color: #F3F3F3;
     --gray-color-300: #D8D8D8;
     --gray-color-500: #AEAEAE;
     --gray-color-800: #3A3A3A;
-    --light-gray-color: #D7DDDF;
     --primary-color: #0056b3;
     --light-color: #ced4da;
     --dark-color: #212529;
     --light-blue-color: #004085;
-    --navbar-color-color: #131814;
-    --swiper-theme-color: #4A4A4A;
-    --swiper-pagination-color: #4A4A4A;
 
     --body-font: "Lato", sans-serif;
     --heading-font: "Jost", sans-serif;
@@ -97,6 +92,21 @@ header form {
     max-height: 550px;
 }
 
+.carousel-caption {
+    position: absolute;
+    top: 320px;
+}
+
+.carousel-caption h5 {
+    color: var(--primary-color);
+    font-size: 56px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.carousel-caption p {
+    color: var(--white-color);
+}
 
 /* FORM */
 

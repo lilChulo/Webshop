@@ -3,7 +3,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 from products.models import Product, ReportedReview
-from products.forms import ProductForm, Review
+from products.forms import Review
 
 
 def is_customerservice(user):
