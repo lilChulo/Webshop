@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Customer Service Dashboard{% endblock %}
+{% block title %}Customer Service Dashboard - TechMart{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -15,12 +15,12 @@
             </div>
             <div>
                 <a href="{% url 'product:edit-product' product.id %}" class="btn btn-sm btn-info me-2">
-                    <i class="fas fa-edit"></i> Edit
+                    <i class="fa fa-pencil"></i> Edit
                 </a>
                 <form action="{% url 'product:delete-product' product.id %}" method="post" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-danger">
-                        <i class="fas fa-trash-alt"></i> Delete
+                        <i class="fa fa-trash"></i> Delete
                     </button>
                 </form>
             </div>
@@ -40,7 +40,7 @@
                         <div>
                             <h5 class="mb-0">
                                 {{ reported_review.review.text }}
-                                <i class="fas fa-times-circle text-danger"></i>
+                                <i class="fa fa-times-circle text-danger"></i>
                             </h5>
                             <span class="text-muted">Reported by: {{ reported_review.reported_by }}</span><br>
                             <span>"{{ reported_review.review.comment }}"</span>
@@ -49,19 +49,19 @@
                             <form action="{% url 'customerservice:delete-reported-review' reported_review.id %}" method="post" style="display: inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-danger">
-                                    <i class="fas fa-trash-alt"></i> Delete Report
+                                    <i class="fa fa-trash"></i> Delete Report
                                 </button>
                             </form>
                             <form action="{% url 'customerservice:toggle-resolve-reported-review' reported_review.id %}" method="post" style="display: inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-success">
-                                    <i class="fas fa-check-circle"></i> Resolve
+                                    <i class="fa fa-check-circle"></i> Resolve
                                 </button>
                             </form>
                             <form action="{% url 'customerservice:delete-review-and-resolve' reported_review.id %}" method="post" style="display: inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-trash-alt"></i><i class="fas fa-check-circle"></i> Delete & Resolve
+                                    <i class="fa fa-trash"></i><i class="fa fa-check-circle"></i> Delete & Resolve
                                 </button>
                             </form>
                         </div>
@@ -74,7 +74,7 @@
                         <div>
                             <h5 class="mb-0">
                                 {{ reported_review.review.text }}
-                                <i class="fas fa-check-circle text-success"></i>
+                                <i class="fa fa-check-circle text-success"></i>
                             </h5>
                             <span class="text-muted">Reported by: {{ reported_review.reported_by }}</span><br>
                             <span>"{{ reported_review.review.comment }}"</span>
@@ -83,13 +83,13 @@
                             <form action="{% url 'customerservice:delete-reported-review' reported_review.id %}" method="post" style="display: inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-danger">
-                                    <i class="fas fa-trash-alt"></i> Delete Report
+                                    <i class="fa fa-trash"></i> Delete Report
                                 </button>
                             </form>
                             <form action="{% url 'customerservice:toggle-resolve-reported-review' reported_review.id %}" method="post" style="display: inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-times-circle"></i> Unresolve
+                                    <i class="fa fa-times-circle"></i> Unresolve
                                 </button>
                             </form>
                         </div>

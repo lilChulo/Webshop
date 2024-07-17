@@ -10,11 +10,7 @@
   {% load bootstrap5 %}
   {% bootstrap_css %}
   {% bootstrap_javascript %}
-  <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
-  <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
-  <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
-  <script src="{% static 'fontawesome_free/js/all.min.js' %}"></script>
-  
+  <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div class="wrapper">
@@ -47,7 +43,7 @@
                     </li>
                       <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">
-                          <i class="fas fa-sign-out-alt"></i> Logout
+                          <i class="fa fa-sign-out"></i> Logout
                         </a>
                     </li>
                   {% else %}
@@ -56,12 +52,12 @@
                       </li>
                       <li class="nav-item">
                           <a class="nav-link" href="{% url 'login' %}">
-                            <i class="fas fa-sign-in-alt"></i> Login
+                            <i class="fa fa-sign-in"></i> Login
                           </a>
                       </li>
                       <li class="nav-item">
                           <a class="nav-link" href="{% url 'register' %}">
-                            <i class="fas fa-user-plus"></i> Signup
+                            <i class="fa fa-user-plus"></i> Signup
                           </a>
                       </li>
                   {% endif %}
@@ -77,13 +73,13 @@
                 <label class="visually-hidden" for="search">Search</label>
                 <input class="form-control me-2" type="search" id="search" name="q" placeholder="Search for products...">
                 <button class="btn btn-outline-success" type="submit">
-                  <i class="fas fa-search"></i>
+                  <i class="fa fa-search"></i>
                 </button>
               </form>
             </div>
             <div class="d-flex align-items-center">
               <a href="{% url 'cart:shopping-cart-show' %}" class="btn btn-primary position-relative">
-                <i class="fas fa-shopping-cart me-1"></i>  (${{ request.user.shoppingcart.get_total }})
+                <i class="fa fa-shopping-cart"></i>  (${{ request.user.shoppingcart.get_total }})
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                     {{ request.user.shoppingcart.total_items }}
                     <span class="visually-hidden">Items</span>
@@ -164,13 +160,13 @@
             <h5 class="text-uppercase">Contact Us</h5>
             <ul class="list-unstyled">
               <li>
-                <p><i class="fas fa-map-marker-alt me-2"></i>Luxemburger Str. 10, 13353 Berlin</p>
+                <p><i class="fa fa-map me-2"></i>Luxemburger Str. 10, 13353 Berlin</p>
               </li>
               <li>
-                <p><i class="fas fa-phone me-2"></i>030 45040</p>
+                <p><i class="fa fa-phone me-2"></i>030 45040</p>
               </li>
               <li>
-                <p><i class="fas fa-envelope me-2"></i>info@techmarkt.com</p>
+                <p><i class="fa fa-envelope me-2"></i>info@techmarkt.com</p>
               </li>
             </ul>
           </div>
@@ -181,7 +177,6 @@
         <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/logo-footer.png'%}" alt="Logo"></a>
       </div>
     </footer>
-
   </div>
 </body>
 </html>
